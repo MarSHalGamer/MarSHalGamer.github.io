@@ -90,4 +90,28 @@ footer{
   <a href="admins.html">🛡️ الأدمن</a>
   <a href="supporters.html">💙 الداعمين</a>
   <a href="rules.html">📜 القوانين</a>
-  <a href="mtasa://">🎮 العب الآن</a
+  <a href="mtasa://">🎮 العب الآن</a>
+
+  <!-- زر الدسكورد -->
+  <button onclick="copyDiscord()">https://discord.gg/7U7QF4f5VD </button>
+</div>
+
+<div id="toast">✅ تم نسخ رابط الدسكورد</div>
+
+<footer>
+© 2026 RP City MTAS — جميع الحقوق محفوظة
+</footer>
+
+<script>
+function copyDiscord(){
+  const discordLink = "https://discord.gg/PUT-YOUR-LINK-HERE";
+  navigator.clipboard.writeText(discordLink).then(()=>{
+    const toast = document.getElementById("toast");
+    toast.style.display = "block";
+    setTimeout(()=>{ toast.style.display = "none"; }, 2500);
+  });
+}
+</script>
+
+</body>
+</html>
