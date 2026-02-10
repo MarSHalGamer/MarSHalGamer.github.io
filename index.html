@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <title>RP City MTAS</title>
 
-<!-- خط جميل -->
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
@@ -90,10 +89,11 @@ footer{
   <a href="admins.html">🛡️ الأدمن</a>
   <a href="supporters.html">💙 الداعمين</a>
   <a href="rules.html">📜 القوانين</a>
+  <a href="shop.html">🛒 المتجر</a>
   <a href="mtasa://">🎮 العب الآن</a>
 
   <!-- زر الدسكورد -->
-  <button onclick="copyDiscord()">https://discord.gg/7U7QF4f5VD </button>
+  <button onclick="copyDiscord()">🔗 رابط الدسكورد</button>
 </div>
 
 <div id="toast">✅ تم نسخ رابط الدسكورد</div>
@@ -104,7 +104,7 @@ footer{
 
 <script>
 function copyDiscord(){
-  const discordLink = "https://discord.gg/PUT-YOUR-LINK-HERE";
+  const discordLink = "https://discord.gg/7U7QF4f5VD";
   navigator.clipboard.writeText(discordLink).then(()=>{
     const toast = document.getElementById("toast");
     toast.style.display = "block";
