@@ -20,16 +20,40 @@ body{
   box-shadow:0 0 25px #9333ea;
 }
 .faction-block{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:15px;
   background:rgba(124,58,237,0.14);
   margin:25px 0;
   padding:14px;
   border-radius:15px;
   font-size:20px;
   box-shadow:0 2px 7px #6a0dad52;
+  flex-wrap:wrap;
+}
+.faction-img{
+  width:48px;
+  height:48px;
+  border-radius:12px;
+  object-fit:cover;
+  border:2px solid #c084fc;
+  background:#222;
+}
+.faction-name-and-members{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  text-align:right;
+}
+.faction-name{
+  font-weight:bold;
+  font-size:20px;
+  color:white;
 }
 .faction-members{
-  margin-top:10px;
-  font-size:17px;
+  margin-top:7px;
+  font-size:16px;
   color:#b3b3ff;
 }
 a{color:#c084fc;text-decoration:none;font-size:18px;}
@@ -41,28 +65,51 @@ a{color:#c084fc;text-decoration:none;font-size:18px;}
 <h1>🏴 الفاكشنات الحكومية</h1>
 
 <div class="faction-block">
-  وزارة الداخليه
-  <div class="faction-members">عدد الأعضاء: غير متوفر حالياً</div>
+  <img class="faction-img" src="images/police.png" alt="شعار وزارة الداخلية">
+  <div class="faction-name-and-members">
+    <div class="faction-name">وزارة الداخليه</div>
+    <div class="faction-members">عدد الأعضاء: غير متوفر حالياً</div>
+  </div>
 </div>
+
 <div class="faction-block">
-  وزارة الإعلام
-  <div class="faction-members">عدد الأعضاء: غير متوفر حالياً</div>
+  <img class="faction-img" src="images/media.png" alt="شعار وزارة الإعلام">
+  <div class="faction-name-and-members">
+    <div class="faction-name">وزارة الإعلام</div>
+    <div class="faction-members">عدد الأعضاء: غير متوفر حالياً</div>
+  </div>
 </div>
+
 <div class="faction-block">
-  مكتب التحقيقات الفييدرالي
-  <div class="faction-members">عدد الأعضاء: غير متوفر حالياً</div>
+  <img class="faction-img" src="images/fbi.png" alt="شعار مكتب التحقيقات الفييدرالي">
+  <div class="faction-name-and-members">
+    <div class="faction-name">مكتب التحقيقات الفييدرالي</div>
+    <div class="faction-members">عدد الأعضاء: غير متوفر حالياً</div>
+  </div>
 </div>
+
 <div class="faction-block">
-  قوات التدخل السريع
-  <div class="faction-members">عدد الأعضاء: غير متوفر حالياً</div>
+  <img class="faction-img" src="images/swat.png" alt="شعار قوات التدخل السريع">
+  <div class="faction-name-and-members">
+    <div class="faction-name">قوات التدخل السريع</div>
+    <div class="faction-members">عدد الأعضاء: غير متوفر حالياً</div>
+  </div>
 </div>
+
 <div class="faction-block">
-  وزارة الصحه
-  <div class="faction-members">عدد الأعضاء: غير متوفر حالياً</div>
+  <img class="faction-img" src="images/health.png" alt="شعار وزارة الصحه">
+  <div class="faction-name-and-members">
+    <div class="faction-name">وزارة الصحه</div>
+    <div class="faction-members">عدد الأعضاء: غير متوفر حالياً</div>
+  </div>
 </div>
+
 <div class="faction-block">
-  وزارة العدل
-  <div class="faction-members">عدد الأعضاء: غير متوفر حالياً</div>
+  <img class="faction-img" src="images/justice.png" alt="شعار وزارة العدل">
+  <div class="faction-name-and-members">
+    <div class="faction-name">وزارة العدل</div>
+    <div class="faction-members">عدد الأعضاء: غير متوفر حالياً</div>
+  </div>
 </div>
 
 <br>
