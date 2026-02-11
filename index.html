@@ -77,6 +77,9 @@ footer{
 
 <body>
 
+<!-- صوت الضغط -->
+<audio id="clickSound" src="click.mp3" preload="auto"></audio>
+
 <div class="logo">
   <img src="logo.png" alt="RP City Logo">
 </div>
@@ -92,7 +95,6 @@ footer{
   <a href="shop.html">🛒 المتجر</a>
   <a href="mtasa://">🎮 العب الآن</a>
 
-  <!-- زر الدسكورد -->
   <button onclick="copyDiscord()">🔗 رابط الدسكورد</button>
 </div>
 
@@ -103,6 +105,15 @@ footer{
 </footer>
 
 <script>
+const sound = document.getElementById("clickSound");
+
+document.querySelectorAll(".buttons a, .buttons button").forEach(el=>{
+  el.addEventListener("click", ()=>{
+    sound.currentTime = 0;
+    sound.play();
+  });
+});
+
 function copyDiscord(){
   const discordLink = "https://discord.gg/7U7QF4f5VD";
   navigator.clipboard.writeText(discordLink).then(()=>{
