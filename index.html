@@ -13,6 +13,7 @@ body{
   background:radial-gradient(circle at top, #6a0dad, #000000 70%);
   color:white;
   text-align:center;
+  overflow-x: hidden;
 }
 
 .logo{
@@ -46,6 +47,7 @@ h1{
   cursor:pointer;
   box-shadow:0 0 15px rgba(168,85,247,0.5);
   transition:0.3s;
+  font-family: 'Cairo', sans-serif;
 }
 
 .buttons a:hover, .buttons button:hover{
@@ -53,7 +55,7 @@ h1{
   box-shadow:0 0 30px rgba(168,85,247,0.9);
 }
 
-/* قسم الأدمن */
+/* زر الأدمن */
 .admin-section {
   margin-top: 50px;
 }
@@ -67,11 +69,88 @@ h1{
   cursor: pointer;
   font-size: 16px;
   transition: 0.3s;
+  font-family: 'Cairo', sans-serif;
 }
 
 .admin-btn:hover {
   color: #a855f7;
   border-color: #a855f7;
+}
+
+/* ستايل نافذة إدخال كلمة المرور الجديد */
+.admin-modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: #1a1b4b;
+  padding: 40px;
+  border-radius: 20px;
+  border: 2px solid #a855f7;
+  box-shadow: 0 0 40px rgba(168, 85, 247, 0.4);
+  width: 350px;
+  text-align: center;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  font-size: 22px;
+  color: #a855f7;
+}
+
+.modal-content input {
+  width: 100%;
+  padding: 12px;
+  margin: 20px 0;
+  border-radius: 10px;
+  border: 1px solid #444;
+  background: #000;
+  color: white;
+  font-family: 'Cairo', sans-serif;
+  text-align: center;
+  font-size: 18px;
+  box-sizing: border-box;
+}
+
+.modal-content input:focus {
+  border-color: #a855f7;
+  outline: none;
+  box-shadow: 0 0 10px #a855f7;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.modal-confirm {
+  flex: 2;
+  background: #7c3aed;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Cairo', sans-serif;
+  font-weight: bold;
+}
+
+.modal-cancel {
+  flex: 1;
+  background: #444;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Cairo', sans-serif;
 }
 
 #toast{
@@ -98,6 +177,18 @@ footer{
 
 <body>
 
+<div id="adminModal" class="admin-modal">
+  <div class="modal-content">
+    <h2>🔐 دخول الإدارة</h2>
+    <p style="font-size: 14px; color: #ccc;">يرجى إدخال كلمة المرور للمتابعة</p>
+    <input type="password" id="adminPass" placeholder="••••••••">
+    <div class="modal-buttons">
+      <button class="modal-confirm" onclick="checkAdminPass()">دخول</button>
+      <button class="modal-cancel" onclick="closeAdminModal()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
 <audio id="clickSound" src="click.mp3" preload="auto"></audio>
 
 <div class="logo">
@@ -119,7 +210,7 @@ footer{
 </div>
 
 <div class="admin-section">
-    <button class="admin-btn" onclick="goToAdmin()">🔐 خاص بالادمن</button>
+    <button class="admin-btn" onclick="openAdminModal()">🔐 خاص بالادمن</button>
 </div>
 
 <div id="toast">✅ تم نسخ رابط الدسكورد</div>
@@ -131,13 +222,9 @@ footer{
 <script>
 const sound = document.getElementById("clickSound");
 
-// تفعيل الصوت لجميع العناصر القابلة للضغط
-document.querySelectorAll(".buttons a, .buttons button, .admin-btn").forEach(el=>{
+document.querySelectorAll("button, a").forEach(el=>{
   el.addEventListener("click", ()=>{
-    if(sound) {
-        sound.currentTime = 0;
-        sound.play();
-    }
+    if(sound) { sound.currentTime = 0; sound.play(); }
   });
 });
 
@@ -150,17 +237,33 @@ function copyDiscord(){
   });
 }
 
-// وظيفة الدخول بكلمة مرور
-function goToAdmin() {
-    const password = prompt("الرجاء إدخال كلمة المرور الخاصة بالإدارة:");
-    
-    // كلمة المرور هي 1234 (تقدر تغيرها هنا)
-    if (password === "1234") { 
-        window.location.href = "admin_panel.html"; 
-    } else if (password !== null) {
-        alert("كلمة المرور خاطئة!");
-    }
+/* وظائف النافذة الجديدة */
+function openAdminModal() {
+  document.getElementById("adminModal").style.display = "flex";
+  document.getElementById("adminPass").focus();
 }
+
+function closeAdminModal() {
+  document.getElementById("adminModal").style.display = "none";
+  document.getElementById("adminPass").value = "";
+}
+
+function checkAdminPass() {
+  const pass = document.getElementById("adminPass").value;
+  if (pass === "1234") {
+    window.location.href = "admin_panel.html";
+  } else {
+    alert("كلمة المرور خاطئة!");
+    document.getElementById("adminPass").value = "";
+  }
+}
+
+// إغلاق النافذة عند الضغط على Enter
+document.getElementById("adminPass").addEventListener("keyup", function(event) {
+  if (event.key === "Enter") {
+    checkAdminPass();
+  }
+});
 </script>
 
 </body>
