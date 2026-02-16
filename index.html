@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <title>RP City MTAS</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+
 <style>
 body{
   margin:0;
@@ -11,64 +13,26 @@ body{
   background:radial-gradient(circle at top, #6a0dad, #000000 70%);
   color:white;
   text-align:center;
-  min-height: 100vh;
 }
 
-/* شريط التنقل العلوي */
-.top-nav {
-  display: flex;
-  justify-content: flex-end;
-  padding: 20px 40px;
-  min-height: 80px;
+.logo{
+  margin-top:40px;
+}
+.logo img{
+  width:200px;
+  filter:drop-shadow(0 0 20px #a855f7);
 }
 
-/* شكل البروفايل (الدائرة السوداء) */
-.user-profile {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
+h1{
+  margin-top:10px;
+  font-size:38px;
+  letter-spacing:1px;
 }
 
-.avatar-black {
-  width: 55px;
-  height: 55px;
-  background: #000;
-  border: 2px solid #a855f7;
-  border-radius: 50%;
-  box-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
+.buttons{
+  margin-top:50px;
 }
 
-#username-display {
-  font-weight: bold;
-  font-size: 18px;
-  color: #e9d5ff;
-}
-
-.logout-link {
-  color: #ff4d4d;
-  text-decoration: none;
-  font-size: 13px;
-  cursor: pointer;
-}
-
-/* أزرار الدخول الافتراضية */
-.auth-btn {
-  padding: 10px 25px;
-  margin-left: 10px;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: bold;
-  transition: 0.3s;
-}
-
-.login-btn { border: 2px solid #a855f7; color: white; }
-.register-btn { background: #a855f7; color: white; border: 2px solid #a855f7; }
-
-.logo img{ width:200px; filter:drop-shadow(0 0 20px #a855f7); margin-top:20px; }
-h1{ font-size:38px; margin-top:10px; }
-
-.buttons{ margin-top:50px; }
 .buttons a, .buttons button{
   display:inline-block;
   margin:15px;
@@ -84,81 +48,119 @@ h1{ font-size:38px; margin-top:10px; }
   transition:0.3s;
 }
 
-.buttons a:hover, .buttons button:hover{ transform:translateY(-6px); box-shadow:0 0 30px rgba(168,85,247,0.9); }
-
-#toast{
-  position:fixed; bottom:40px; left:50%; transform:translateX(-50%);
-  background:rgba(0,0,0,0.8); padding:15px 35px; border-radius:15px;
-  display:none; border: 1px solid #9333ea;
+.buttons a:hover, .buttons button:hover{
+  transform:translateY(-6px) scale(1.05);
+  box-shadow:0 0 30px rgba(168,85,247,0.9);
 }
 
-footer{ margin-top:60px; padding:25px; color:#aaa; }
+/* قسم الأدمن */
+.admin-section {
+  margin-top: 50px;
+}
+
+.admin-btn {
+  background: none;
+  border: 1px solid #444;
+  color: #888;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+.admin-btn:hover {
+  color: #a855f7;
+  border-color: #a855f7;
+}
+
+#toast{
+  position:fixed;
+  bottom:40px;
+  left:50%;
+  transform:translateX(-50%);
+  background:rgba(0,0,0,0.8);
+  padding:15px 35px;
+  border-radius:15px;
+  box-shadow:0 0 20px #9333ea;
+  display:none;
+  font-size:18px;
+}
+
+footer{
+  margin-top:60px;
+  padding:25px;
+  color:#aaa;
+  font-size:15px;
+}
 </style>
 </head>
+
 <body>
 
-<div class="top-nav" id="nav-container">
-  <div id="guest-zone">
-    <a href="login.html" class="auth-btn login-btn">تسجيل الدخول</a>
-    <a href="register.html" class="auth-btn register-btn">إنشاء حساب</a>
-  </div>
-  
-  <div id="user-zone" style="display: none;">
-    <div class="user-profile">
-      <div class="avatar-black"></div>
-      <span id="username-display"></span>
-      <a onclick="logout()" class="logout-link">تسجيل خروج</a>
-    </div>
-  </div>
+<audio id="clickSound" src="click.mp3" preload="auto"></audio>
+
+<div class="logo">
+  <img src="logo.png" alt="RP City Logo">
 </div>
 
-<div class="logo"><img src="logo.png" alt="RP City Logo"></div>
 <h1>RP City Roleplay MTA.San</h1>
 <p>الموقع الرسمي لسيرفر RP City</p>
 
 <div class="buttons">
-  <a href="owners.html">🕍 القطاعات</a>
+  <a href="owners.html">🕍 القطاعات </a>
   <a href="admins.html">🛡️ الأدمن</a>
   <a href="supporters.html">💙 الداعمين</a>
   <a href="rules.html">📜 القوانين</a>
   <a href="shop.html">🛒 المتجر</a>
   <a href="mtasa://">🎮 العب الآن</a>
+
   <button onclick="copyDiscord()">🔗 رابط الدسكورد</button>
 </div>
 
+<div class="admin-section">
+    <button class="admin-btn" onclick="goToAdmin()">🔐 خاص بالادمن</button>
+</div>
+
 <div id="toast">✅ تم نسخ رابط الدسكورد</div>
-<audio id="clickSound" src="click.mp3" preload="auto"></audio>
+
+<footer>
+© 2026 RP City MTAS — جميع الحقوق محفوظة
+</footer>
 
 <script>
-window.onload = function() {
-    const loggedInUser = localStorage.getItem("currentUser");
-    if (loggedInUser) {
-        document.getElementById("guest-zone").style.display = "none";
-        document.getElementById("user-zone").style.display = "block";
-        document.getElementById("username-display").innerText = loggedInUser;
-    }
-}
+const sound = document.getElementById("clickSound");
 
-function logout() {
-    localStorage.removeItem("currentUser");
-    location.reload();
-}
+// تفعيل الصوت لجميع العناصر القابلة للضغط
+document.querySelectorAll(".buttons a, .buttons button, .admin-btn").forEach(el=>{
+  el.addEventListener("click", ()=>{
+    if(sound) {
+        sound.currentTime = 0;
+        sound.play();
+    }
+  });
+});
 
 function copyDiscord(){
-    const discordLink = "https://discord.gg/7U7QF4f5VD";
-    navigator.clipboard.writeText(discordLink).then(()=>{
-        const toast = document.getElementById("toast");
-        toast.style.display = "block";
-        setTimeout(()=>{ toast.style.display = "none"; }, 2500);
-    });
+  const discordLink = "https://discord.gg/7U7QF4f5VD";
+  navigator.clipboard.writeText(discordLink).then(()=>{
+    const toast = document.getElementById("toast");
+    toast.style.display = "block";
+    setTimeout(()=>{ toast.style.display = "none"; }, 2500);
+  });
 }
 
-document.querySelectorAll("a, button").forEach(el => {
-    el.addEventListener("click", () => {
-        const s = document.getElementById("clickSound");
-        if(s) { s.currentTime = 0; s.play(); }
-    });
-});
+// وظيفة الدخول بكلمة مرور
+function goToAdmin() {
+    const password = prompt("الرجاء إدخال كلمة المرور الخاصة بالإدارة:");
+    
+    // كلمة المرور هي 1234 (تقدر تغيرها هنا)
+    if (password === "1234") { 
+        window.location.href = "admin_panel.html"; 
+    } else if (password !== null) {
+        alert("كلمة المرور خاطئة!");
+    }
+}
 </script>
 
 </body>
