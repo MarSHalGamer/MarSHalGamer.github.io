@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>لوحة الإدارة - RP City</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    body {
+        margin: 0;
+        font-family: 'Cairo', sans-serif;
+        background: radial-gradient(circle at top, #1a1b4b, #000000 80%);
+        color: white;
+        text-align: center;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    h1 { color: #a855f7; margin-bottom: 50px; }
+    .admin-button {
+        padding: 20px 50px;
+        background: linear-gradient(135deg, #7c3aed, #1e1b4b);
+        color: white;
+        border: 2px solid #a855f7;
+        border-radius: 15px;
+        font-size: 24px;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+        transition: 0.3s;
+    }
+    .admin-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 35px rgba(168, 85, 247, 0.8);
+    }
+    .back-home { margin-top: 30px; color: #888; text-decoration: none; font-size: 14px; }
+</style>
+</head>
+<body>
+
+    <h1>لوحة تحكم الأدمن 🔐</h1>
+
+    <button class="admin-button" onclick="alert('سيتم فتح صفحة عرض المشاكل قريباً')">
+        📖 قراءة المشاكل
+    </button>
+
+    <a href="index.html" class="back-home">العودة للصفحة الرئيسية</a>
+
+</body>
+</html>
