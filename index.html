@@ -15,8 +15,42 @@ body{
   text-align:center;
 }
 
+/* التنسيق الجديد لقسم تسجيل الدخول في الأعلى */
+.top-nav {
+  display: flex;
+  justify-content: flex-end;
+  padding: 20px 40px;
+  gap: 15px;
+}
+
+.auth-btn {
+  padding: 10px 25px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+.login-btn {
+  background: transparent;
+  border: 2px solid #a855f7;
+  color: white;
+}
+
+.register-btn {
+  background: #a855f7;
+  border: 2px solid #a855f7;
+  color: white;
+}
+
+.auth-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
+}
+
 .logo{
-  margin-top:40px;
+  margin-top:20px;
 }
 .logo img{
   width:200px;
@@ -77,7 +111,11 @@ footer{
 
 <body>
 
-<!-- صوت الضغط -->
+<div class="top-nav">
+  <a href="login.html" class="auth-btn login-btn">تسجيل الدخول</a>
+  <a href="register.html" class="auth-btn register-btn">إنشاء حساب</a>
+</div>
+
 <audio id="clickSound" src="click.mp3" preload="auto"></audio>
 
 <div class="logo">
@@ -107,7 +145,8 @@ footer{
 <script>
 const sound = document.getElementById("clickSound");
 
-document.querySelectorAll(".buttons a, .buttons button").forEach(el=>{
+// تفعيل صوت الضغط للأزرار الجديدة أيضاً
+document.querySelectorAll(".buttons a, .buttons button, .auth-btn").forEach(el=>{
   el.addEventListener("click", ()=>{
     sound.currentTime = 0;
     sound.play();
