@@ -32,6 +32,21 @@ h1{
   margin-bottom:30px;
 }
 
+/* تنسيق القوانين الجديدة المضافة من الإدارة */
+.extra-rules {
+  margin-top: 20px;
+  border-top: 1px dashed #a855f7;
+  padding-top: 20px;
+}
+
+.new-rule {
+  background: rgba(168, 85, 247, 0.1);
+  padding: 10px;
+  margin: 5px 0;
+  border-right: 4px solid #a855f7;
+  border-radius: 5px;
+}
+
 .buttons{
   margin-top:30px;
   text-align:center;
@@ -79,11 +94,33 @@ h1{
   <p>DOS - Denial Of Service RP: يمنع تعطيل السيناريوهات أو تخريبها.</p>
   <p>RDM - Random Death Match: يمنع القتل العشوائي بدون سبب.</p>
 
+  <div id="dynamicRules" class="extra-rules"></div>
+
   <div class="buttons">
     <a href="index.html">⬅ العودة للرئيسية</a>
     <a href="mtasa://">🎮 العب الآن</a>
   </div>
 </div>
+
+<script>
+    // كود جلب القوانين المضافة من لوحة الإدارة
+    window.onload = function() {
+        const dynamicArea = document.getElementById("dynamicRules");
+        const savedRules = localStorage.getItem("serverRules");
+
+        if (savedRules) {
+            const lines = savedRules.split('\n');
+            lines.forEach(line => {
+                if(line.trim() !== "") {
+                    const ruleDiv = document.createElement("div");
+                    ruleDiv.className = "new-rule";
+                    ruleDiv.innerText = line;
+                    dynamicArea.appendChild(ruleDiv);
+                }
+            });
+        }
+    }
+</script>
 
 </body>
 </html>
