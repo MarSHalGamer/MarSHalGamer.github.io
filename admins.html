@@ -2,92 +2,139 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>الأدمن - RP City</title>
+<title>طاقم الإدارة - RP City</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
 <style>
-body{
-  background:radial-gradient(circle at top, #4c1d95, #000 70%);
-  color:white;
-  font-family:'Cairo', sans-serif;
-  text-align:center;
+body {
+  background: radial-gradient(circle at top, #4c1d95, #000 70%);
+  color: white;
+  font-family: 'Cairo', sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 0;
 }
-.box{
-  background:rgba(0,0,0,0.6);
-  margin:80px auto;
-  width:60%;
-  padding:30px;
-  border-radius:20px;
-  box-shadow:0 0 25px #7c3aed;
+
+.box {
+  background: rgba(0, 0, 0, 0.6);
+  margin: 60px auto;
+  width: 80%;
+  max-width: 800px;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 0 25px #7c3aed;
 }
-a{color:#c084fc;text-decoration:none;font-size:18px;}
-hr {border:1px solid #7c3aed;}
-.notice{
-  margin-top:40px;
-  padding:15px;
-  background:rgba(124,58,237,0.15);
-  border-radius:12px;
-  font-size:19px;
-  width:95%;
-  margin-left:auto;
-  margin-right:auto;
+
+h1 {
+  color: #a855f7;
+  text-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
+  margin-bottom: 40px;
+}
+
+/* حاوية عرض الطاقم */
+#staffDisplay {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+/* تنسيق بطاقة الإداري الجديد */
+.staff-card {
+  background: rgba(124, 58, 237, 0.1);
+  border: 1px solid #7c3aed;
+  padding: 15px 25px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: 0.3s;
+}
+
+.staff-card:hover {
+  background: rgba(124, 58, 237, 0.2);
+  transform: scale(1.02);
+}
+
+.staff-name {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.staff-rank {
+  background: #7c3aed;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #7c3aed, transparent);
+  margin: 20px 0;
+}
+
+a {
+  color: #c084fc;
+  text-decoration: none;
+  font-size: 18px;
+  transition: 0.3s;
+}
+
+a:hover {
+  text-shadow: 0 0 10px #c084fc;
+}
+
+.notice {
+  margin-top: 40px;
+  padding: 15px;
+  background: rgba(124, 58, 237, 0.15);
+  border-radius: 12px;
+  font-size: 17px;
+  border-right: 4px solid #a855f7;
 }
 </style>
 </head>
 <body>
 
 <div class="box">
-<h1>🛡️ الأدمن</h1>
+  <h1>🛡️ طاقم إدارة RP City</h1>
 
-<!-- Staff Team -->
-<p>Head Staf Team : 𝟓𝐲𝐦 ﾔ</p>
-<p>Senior Staff Team : غير موجود حاليا </p>
-<p>Staff Team : 𝕮𝖔𝖒𝖊𝖃 ﾔ</p>
-<p>Junior Staff Team: 7𝑖𝓃ℯ𝓎𝑎 .</p>
-<p>Trial Staff team : غير موجود حاليا </p>
-<p>Tester Staff Team : غير موجود حاليا</p>
+  <div id="staffDisplay">
+    <p style="color: #888;">جاري تحميل قائمة الطاقم...</p>
+  </div>
 
-<hr>
-<!-- ADMINS -->
-<p>------------ADMINS-------------</p>
-<p>Moderator : غير موجود حاليا</p>
-<p>Head Administration : غير موجود حاليا</p>
-<p>Deputy Head of Administration : غير موجود حاليا</p>
-<p>Lead Administrator : غير موجود حاليا.</p>
-<p>Junior Administrator: 𝑯𝒂𝒅𝒐𝒋𝒊𝑪𝒓𝒐𝒔𝒔𝒇𝒊𝒆𝒍𝒅 .</p>
-<p>Senior Administration : مستر بطوطة ، Mohamed </p>
-<p>Administrator : R A Z E</p>
-<p>Trial Administrator: x_haloumaʷᵀ ، X_THR ، Этот аккаунт был взломан .</p>
+  <hr>
 
-<hr>
-<!-- Scripters -->
-<p>------------Scripters-----------</p>
-<p>Scripter lvel 3 :  Zero</p>
-<p>Scripter lvel 2 : غير موجود حاليا</p>
-<p>Scripter lvel 1 : غير موجود حاليا</p>
+  <a href="index.html">⬅ العودة للرئيسية</a>
 
-<hr>
-<!-- Supports -->
-<p>__SUPPORTS__</p>
-<p>Support : غير موجود حاليا</p>
-<p>Trail Support : غير موجود حاليا</p>
-<p>Tester Support : NOUFEL :! ، 𝔂𝓪𝓱𝓲𝓪 777ᴱⱽ</p>
-
-<hr>
-<!-- Faction System -->
-<p>----Faction System-----</p>
-<p>Faction System : 𝟓𝐲𝐦 ﾔ</p>
-<p>Faction System : Zero</p>
-<p>Faction System : Zahmoula</p>
-<p>Faction System : ☈ | Kar4vex | ☈</p>
-
-<br>
-<a href="index.html">⬅ العودة للرئيسية</a>
-
-<div class="notice">
-ملاحظة : التقديم مفتوح على جميع الرتب التي ليس لها أشخاص
+  <div class="notice">
+    ملاحظة: التقديم مفتوح على جميع الرتب الشاغرة. تواصل مع الإدارة العليا للمزيد من التفاصيل.
+  </div>
 </div>
 
-</div>
+<script>
+    window.onload = function() {
+        const display = document.getElementById("staffDisplay");
+        // جلب البيانات من مصفوفة الإدارة (serverStaffArray)
+        const savedStaff = JSON.parse(localStorage.getItem("serverStaffArray") || "[]");
+
+        if (savedStaff.length > 0) {
+            display.innerHTML = ""; // مسح رسالة التحميل
+            savedStaff.forEach(member => {
+                const card = document.createElement("div");
+                card.className = "staff-card";
+                card.innerHTML = `
+                    <span class="staff-name">${member.name}</span>
+                    <span class="staff-rank">${member.rank}</span>
+                `;
+                display.innerHTML += card.outerHTML;
+            });
+        } else {
+            display.innerHTML = "<p style='color:#888;'>لا يوجد طاقم إدارة مسجل حالياً.</p>";
+        }
+    }
+</script>
 
 </body>
 </html>
