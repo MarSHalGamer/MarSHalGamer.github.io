@@ -30,16 +30,16 @@
         gap: 30px;
         flex-wrap: wrap;
         justify-content: center;
-        max-width: 1000px;
+        max-width: 1200px;
     }
 
-    /* تأثيرات الـ Hover التي طلبتها */
+    /* تأثيرات الـ Hover الاحترافية */
     .admin-card {
         background: rgba(124, 58, 237, 0.1);
         border: 2px solid #a855f7;
         padding: 40px;
         border-radius: 25px;
-        width: 280px;
+        width: 250px;
         cursor: pointer;
         transition: all 0.4s ease;
         text-decoration: none;
@@ -54,7 +54,7 @@
         border-color: #c084fc;
     }
 
-    .admin-card i {
+    .admin-card span {
         font-size: 50px;
         margin-bottom: 15px;
         display: block;
@@ -63,6 +63,12 @@
     .admin-card h3 {
         margin: 10px 0 0;
         font-size: 22px;
+    }
+
+    .admin-card p {
+        font-size: 14px;
+        color: #ccc;
+        margin-top: 10px;
     }
 
     .back-home {
@@ -76,6 +82,7 @@
     .back-home:hover {
         color: #ff4d4d;
         text-shadow: 0 0 10px #ff4d4d;
+        transform: scale(1.1);
     }
 </style>
 </head>
@@ -88,19 +95,25 @@
         <a href="edit_rules.html" class="admin-card">
             <span>📜</span>
             <h3>إدارة القوانين</h3>
-            <p style="font-size: 14px; color: #ccc; margin-top: 10px;">إضافة أو حذف قوانين السيرفر</p>
+            <p>إضافة أو حذف قوانين السيرفر</p>
         </a>
 
         <a href="edit_staff.html" class="admin-card">
             <span>🛡️</span>
-            <h3>إدارة طاقم الإدارة</h3>
-            <p style="font-size: 14px; color: #ccc; margin-top: 10px;">إضافة أو حذف إداريين ورتب</p>
+            <h3>إدارة الطاقم</h3>
+            <p>إضافة أو حذف إداريين ورتب</p>
+        </a>
+
+        <a href="edit_news.html" class="admin-card">
+            <span>📢</span>
+            <h3>شريط الأخبار</h3>
+            <p>تغيير الإعلان المتحرك في الرئيسية</p>
         </a>
 
         <div class="admin-card" style="opacity: 0.5; cursor: not-allowed;">
             <span>💎</span>
             <h3>إدارة الداعمين</h3>
-            <p style="font-size: 12px; color: #aaa;">قريباً...</p>
+            <p>قريباً...</p>
         </div>
 
     </div>
