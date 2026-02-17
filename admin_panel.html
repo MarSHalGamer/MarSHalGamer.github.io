@@ -5,144 +5,18 @@
 <title>لوحة الإدارة - RP City</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
 <style>
-    body {
-        margin: 0;
-        font-family: 'Cairo', sans-serif;
-        background: radial-gradient(circle at top, #1a1b4b, #000000 80%);
-        color: white;
-        text-align: center;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-
-    h1 { color: #a855f7; margin-bottom: 40px; }
-
-    /* ستايل الزر */
-    .admin-card-btn {
-        background: rgba(124, 58, 237, 0.1);
-        border: 2px solid #a855f7;
-        padding: 40px;
-        border-radius: 20px;
-        color: white;
-        cursor: pointer;
-        width: 250px;
-        transition: 0.3s;
-        font-family: 'Cairo', sans-serif;
-    }
-
-    .admin-card-btn:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 0 25px #a855f7;
-    }
-
-    /* النافذة المنبثقة */
-    #rulesModal {
-        display: none; /* مخفي افتراضياً */
-        position: fixed;
-        top: 0; left: 0; 
-        width: 100%; height: 100%;
-        background: rgba(0, 0, 0, 0.9);
-        z-index: 9999;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .modal-content {
-        background: #111;
-        padding: 30px;
-        border-radius: 20px;
-        border: 2px solid #a855f7;
-        width: 90%;
-        max-width: 500px;
-    }
-
-    textarea {
-        width: 100%;
-        height: 200px;
-        background: #000;
-        color: white;
-        border: 1px solid #444;
-        border-radius: 10px;
-        padding: 15px;
-        font-family: 'Cairo';
-        margin: 20px 0;
-        box-sizing: border-box;
-    }
-
-    .btn-save {
-        background: #7c3aed;
-        color: white;
-        border: none;
-        padding: 10px 30px;
-        border-radius: 8px;
-        cursor: pointer;
-        font-family: 'Cairo';
-    }
-
-    .btn-close {
-        background: #444;
-        color: white;
-        border: none;
-        padding: 10px 30px;
-        border-radius: 8px;
-        cursor: pointer;
-        margin-right: 10px;
-        font-family: 'Cairo';
-    }
+body { margin:0; font-family:'Cairo'; background:radial-gradient(circle at top, #1a1b4b, #000); color:white; text-align:center; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.admin-card { background:rgba(124, 58, 237, 0.1); border:2px solid #a855f7; padding:40px; border-radius:20px; cursor:pointer; transition:0.3s; }
+.admin-card:hover { transform:translateY(-5px); box-shadow:0 0 25px #a855f7; }
+h1 { color:#a855f7; margin-bottom:40px; }
 </style>
 </head>
 <body>
-
-    <h1>لوحة تحكم الإدارة العليا 🔐</h1>
-
-    <div class="admin-card-btn" onclick="openRulesModal()">
-        <div style="font-size: 40px; margin-bottom: 10px;">📝</div>
-        <h3>إضافة قوانين</h3>
-    </div>
-
-    <div id="rulesModal">
-        <div class="modal-content">
-            <h2>تعديل القوانين</h2>
-            <textarea id="rulesInput" placeholder="اكتب القوانين هنا... كل قانون في سطر"></textarea>
-            <div>
-                <button class="btn-save" onclick="saveRules()">حفظ</button>
-                <button class="btn-close" onclick="closeRulesModal()">إلغاء</button>
-            </div>
-        </div>
-    </div>
-
-    <a href="index.html" style="margin-top: 40px; color: #888; text-decoration: none;">العودة للرئيسية</a>
-
-    <script>
-        // دالة فتح النافذة
-        function openRulesModal() {
-            const modal = document.getElementById("rulesModal");
-            const textarea = document.getElementById("rulesInput");
-            
-            // جلب القوانين الحالية من الذاكرة
-            const saved = localStorage.getItem("serverRules") || "";
-            textarea.value = saved;
-            
-            // إظهار النافذة
-            modal.style.display = "flex";
-        }
-
-        // دالة إغلاق النافذة
-        function closeRulesModal() {
-            document.getElementById("rulesModal").style.display = "none";
-        }
-
-        // دالة الحفظ
-        function saveRules() {
-            const text = document.getElementById("rulesInput").value;
-            localStorage.setItem("serverRules", text);
-            alert("تم الحفظ بنجاح!");
-            closeRulesModal();
-        }
-    </script>
-
+<h1>لوحة تحكم الإدارة العليا 🔐</h1>
+<div class="admin-card" onclick="location.href='edit_rules.html'">
+    <div style="font-size:50px;">📝</div>
+    <h3>إضافة قوانين</h3>
+</div>
+<a href="index.html" style="margin-top:30px; color:#888; text-decoration:none;">العودة للرئيسية</a>
 </body>
 </html>
