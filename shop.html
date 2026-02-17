@@ -1,139 +1,35 @@
-<!DOCTYPE html>
-<html lang="ar">
-<head>
-<meta charset="UTF-8">
-<title>متجر RP City</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-
-<style>
-body{
-  margin:0;
-  font-family:'Cairo', sans-serif;
-  background:radial-gradient(circle at top, #6a0dad, #000000 70%);
-  color:white;
-  text-align:center;
-}
-
-h1{
-  margin:40px 0 10px;
-  font-size:36px;
-}
-
-.products{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:30px;
-  padding:40px;
-  max-width:1100px;
-  margin:auto;
-}
-
-.product{
-  background:rgba(0,0,0,0.6);
-  border-radius:20px;
-  padding:25px;
-  box-shadow:0 0 20px rgba(168,85,247,0.7);
-  transition: 0.3s;
-}
-
-/* ستايل الصورة داخل بطاقة المنتج */
-.product-img {
-  width: 100%;
-  height: 160px;
-  object-fit: cover;
-  border-radius: 15px;
-  margin-bottom: 15px;
-  border: 1px solid rgba(168, 85, 247, 0.3);
-}
-
-.product h3{
-  margin-top:10px;
-}
-
-.product p{
-  color:#ddd;
-}
-
-.product .desc-text {
-  font-size: 14px;
-  color: #bbb;
-  margin: 10px 0;
-  min-height: 40px;
-}
-
-.product a{
-  display:inline-block;
-  margin-top:15px;
-  padding:12px 30px;
-  background:linear-gradient(135deg,#7c3aed,#1e1b4b);
-  color:white;
-  text-decoration:none;
-  border-radius:12px;
-  box-shadow:0 0 12px rgba(168,85,247,0.5);
-  transition:.3s;
-}
-
-.product a:hover{
-  transform:translateY(-4px) scale(1.05);
-  box-shadow:0 0 25px rgba(168,85,247,0.9);
-}
-
-.buttons{
-  margin:30px;
-}
-
-.buttons a{
-  display:inline-block;
-  margin:10px;
-  padding:14px 35px;
-  background:linear-gradient(135deg,#7c3aed,#1e1b4b);
-  color:white;
-  text-decoration:none;
-  border-radius:15px;
-  font-size:20px;
-  box-shadow:0 0 15px rgba(168,85,247,0.5);
-}
-</style>
-</head>
-
-<body>
-
-<h1>🛒 متجر RP City</h1>
-<p>اختر المنتج وادفع</p>
-
-<div class="products" id="shopDisplay">
-    </div>
-
-<div class="buttons">
-  <a href="index.html">⬅ العودة للرئيسية</a>
-</div>
-
 <script>
-    window.onload = function() {
+    // ⚠️ ضع نفس البيانات هنا أيضاً
+    const BIN_ID = "ضع_هنا_BIN_ID";
+    const MASTER_KEY = "ضع_هنا_MASTER_KEY";
+
+    window.onload = async function() {
         const display = document.getElementById("shopDisplay");
-        const items = JSON.parse(localStorage.getItem("serverShopArray") || "[]");
-        
-        if (items.length > 0) {
-            display.innerHTML = "";
-            items.forEach(item => {
-                // التحقق من وجود صورة، إذا لم توجد نضع صورة افتراضية
-                const imageHtml = item.image ? `<img src="${item.image}" class="product-img">` : '';
-                
-                display.innerHTML += `
-                <div class="product">
-                    ${imageHtml}
-                    <h3>${item.name}</h3>
-                    <p style="color: #22c55e; font-weight: bold;">${item.price}</p>
-                    <p class="desc-text">${item.desc || ''}</p>
-                    <a href="https://discord.gg/7U7QF4f5VD" target="_blank">💳 شراء المنتج , الباقه</a>
-                </div>`;
+        try {
+            const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+                headers: { "X-Master-Key": MASTER_KEY }
             });
-        } else {
-            display.innerHTML = '<div class="product"><h3>لم يتم اضافة منتجات بعد</h3></div>';
+            const result = await res.json();
+            const items = result.record;
+            
+            if (items.length > 0) {
+                display.innerHTML = "";
+                items.forEach(item => {
+                    const imageHtml = item.image ? `<img src="${item.image}" class="product-img">` : '';
+                    display.innerHTML += `
+                    <div class="product">
+                        ${imageHtml}
+                        <h3>${item.name}</h3>
+                        <p style="color: #22c55e; font-weight: bold;">${item.price}</p>
+                        <p class="desc-text">${item.desc || ''}</p>
+                        <a href="https://discord.gg/7U7QF4f5VD" target="_blank">💳 شراء المنتج</a>
+                    </div>`;
+                });
+            } else {
+                display.innerHTML = '<h3>لا توجد باقات حالياً</h3>';
+            }
+        } catch(e) {
+            display.innerHTML = '<h3>حدث خطأ في جلب البيانات من السحابة</h3>';
         }
     }
 </script>
-
-</body>
-</html>
