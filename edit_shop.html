@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>إدارة المتجر - RP City</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    body { margin: 0; font-family: 'Cairo', sans-serif; background: radial-gradient(circle at top, #1a1b4b, #000000 80%); color: white; text-align: center; padding: 40px; }
+    .container { width: 90%; max-width: 700px; margin: 0 auto; background: rgba(0,0,0,0.6); padding: 30px; border-radius: 20px; border: 1px solid #a855f7; }
+    input, textarea { width: 100%; background: #000; color: white; border: 1px solid #444; border-radius: 10px; padding: 12px; font-family: 'Cairo'; margin: 10px 0; box-sizing: border-box; }
+    .btn { background: linear-gradient(135deg, #7c3aed, #1e1b4b); color: white; border: 2px solid #a855f7; padding: 12px; border-radius: 10px; cursor: pointer; width: 100%; font-family: 'Cairo'; font-size: 18px; }
+    .item { background: rgba(255,255,255,0.05); padding: 15px; margin-top: 10px; border-radius: 10px; border-right: 4px solid #a855f7; display: flex; justify-content: space-between; align-items: center; text-align: right; }
+    .edit-btn { background: #0ea5e9; border:none; color:white; padding: 5px 10px; border-radius: 5px; cursor:pointer; margin-left:5px; }
+    .del-btn { background: #ef4444; border:none; color:white; padding: 5px 10px; border-radius: 5px; cursor:pointer; }
+</style>
+</head>
+<body>
+    <h1>🛒 إدارة منتجات المتجر</h1>
+    <div class="container">
+        <input type="text" id="pName" placeholder="اسم الباقة/المنتج">
+        <input type="text" id="pPrice" placeholder="السعر (مثلاً: 50k كريدت)">
+        <textarea id="pDesc" placeholder="وصف المنتج (مميزاته)"></textarea>
+        <button class="btn" id="mainBtn" onclick="handleShop()">إضافة للمتجر</button>
+        <div id="pList" style="margin-top:20px;"></div>
+    </div>
+    <a href="admin_panel.html" style="display:block; margin-top:30px; color:#888; text-decoration:none;">⬅ عودة</a>
+
+    <script>
+        let shopArray = JSON.parse(localStorage.getItem("serverShopArray") || "[]");
+        let editIdx = -1;
+
+        window.onload = draw;
+
+        function handleShop() {
+            const n = document.getElementById("pName"), p = document.getElementById("pPrice"), d = document.getElementById("pDesc");
+            if(!n.value || !p.value) return;
+
+            const item = { name: n.value, price: p.value, desc: d.value };
+            if(editIdx === -1) shopArray.push(item);
+            else { shopArray[editIdx] = item; editIdx = -1; document.getElementById("mainBtn").innerText = "إضافة للمتجر"; }
+
+            localStorage.setItem("serverShopArray", JSON.stringify(shopArray));
+            n.value=""; p.value=""; d.value=""; draw();
+        }
+
+        function draw() {
+            const list = document.getElementById("pList");
+            list.innerHTML = "";
+            shopArray.forEach((it, i) => {
+                list.innerHTML += `<div class="item">
+                    <span><strong>${it.name}</strong> (${it.price})</span>
+                    <div>
+                        <button class="edit-btn" onclick="startEdit(${i})">تعديل</button>
+                        <button class="del-btn" onclick="del(${i})">حذف</button>
+                    </div>
+                </div>`;
+            });
+        }
+
+        function startEdit(i) {
+            editIdx = i;
+            document.getElementById("pName").value = shopArray[i].name;
+            document.getElementById("pPrice").value = shopArray[i].price;
+            document.getElementById("pDesc").value = shopArray[i].desc;
+            document.getElementById("mainBtn").innerText = "تحديث الآن";
+        }
+
+        function del(i) { shopArray.splice(i,1); localStorage.setItem("serverShopArray", JSON.stringify(shopArray)); draw(); }
+    </script>
+</body>
+</html>
