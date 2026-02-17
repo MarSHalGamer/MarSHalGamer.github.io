@@ -3,39 +3,125 @@
 <head>
 <meta charset="UTF-8">
 <title>قوانين RP City</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+
 <style>
-body{ margin:0; font-family:'Cairo', sans-serif; background:radial-gradient(circle at top, #6a0dad, #000000 70%); color:white; text-align:center; }
-.box{ margin:60px auto; width:80%; max-width:900px; background:rgba(0,0,0,0.6); padding:40px; border-radius:20px; box-shadow:0 0 25px rgba(168,85,247,0.8); text-align:right; line-height:2; }
-h1{ text-align:center; margin-bottom:30px; }
-.new-rule { background:rgba(168,85,247,0.1); padding:10px; margin:5px 0; border-right:4px solid #a855f7; border-radius:5px; }
-.buttons{ margin-top:30px; text-align:center; }
-.buttons a{ display:inline-block; margin:15px; padding:15px 40px; background:linear-gradient(135deg,#7c3aed,#1e1b4b); color:white; text-decoration:none; border-radius:15px; font-size:20px; box-shadow:0 0 15px rgba(168,85,247,0.5); transition:0.3s; }
+body{
+  margin:0;
+  font-family:'Cairo', sans-serif;
+  background:radial-gradient(circle at top, #6a0dad, #000000 70%);
+  color:white;
+  text-align:center;
+}
+
+.box{
+  margin:60px auto;
+  width:80%;
+  max-width:900px;
+  background:rgba(0,0,0,0.6);
+  padding:40px;
+  border-radius:20px;
+  box-shadow:0 0 25px rgba(168,85,247,0.8);
+  text-align:right;
+  line-height:2;
+}
+
+h1{
+  text-align:center;
+  margin-bottom:30px;
+}
+
+/* تنسيق القوانين الجديدة المضافة من الإدارة */
+.extra-rules {
+  margin-top: 20px;
+  border-top: 1px dashed #a855f7;
+  padding-top: 20px;
+}
+
+.new-rule {
+  background: rgba(168, 85, 247, 0.1);
+  padding: 10px 15px;
+  margin: 10px 0;
+  border-right: 4px solid #a855f7;
+  border-radius: 5px;
+  word-wrap: break-word;
+}
+
+.buttons{
+  margin-top:30px;
+  text-align:center;
+}
+
+.buttons a{
+  display:inline-block;
+  margin:15px;
+  padding:15px 40px;
+  background:linear-gradient(135deg,#7c3aed,#1e1b4b);
+  color:white;
+  text-decoration:none;
+  border-radius:15px;
+  font-size:20px;
+  box-shadow:0 0 15px rgba(168,85,247,0.5);
+  transition:0.3s;
+}
+
+.buttons a:hover{
+  transform:translateY(-6px) scale(1.05);
+  box-shadow:0 0 30px rgba(168,85,247,0.9);
+}
 </style>
 </head>
+
 <body>
+
 <div class="box">
   <h1>📜 قوانين سيرفر RP City</h1>
-  <p> PG - Power Gaming: يمنع فعل أشياء غير منطقية...</p>
-  <div id="dynamicRules"></div>
-  <div class="buttons"><a href="index.html">⬅ العودة</a></div>
+
+  <p> PG - Power Gaming: يمنع فعل أشياء غير منطقية أو مستحيلة في الواقع.</p>
+  <p>DM - Death Match: يمنع القتل بدون سبب أو سيناريو.</p>
+  <p>MG - Meta Gaming: يمنع استخدام معلومات من خارج اللعبة داخل الرول بلاي.</p>
+  <p>GR - Green Zone: يمنع القتل أو الإجرام داخل المناطق الآمنة.</p>
+  <p>PK - Player Kill: قتل اللاعب بدون سيناريو صحيح.</p>
+  <p>RK - Revenge Kill: يمنع الانتقام بعد الموت مباشرة.</p>
+  <p>SK - Spawn Kill: يمنع قتل اللاعب وقت السبون.</p>
+  <p>NTA - Non Tactical Actions: يمنع التصرفات الغير منطقية أثناء المواقف الخطرة.</p>
+  <p>COS - Combat Logging: يمنع الخروج من السيرفر أثناء القتال.</p>
+  <p>SL - Suicide RP: يمنع الانتحار بدون سيناريو إداري.</p>
+  <p>TK - Team Kill: يمنع قتل أفراد فريقك.</p>
+  <p>VDM - Vehicle Death Match: يمنع دهس اللاعبين بالسيارة بدون سبب.</p>
+  <p>NLR - New Life Rule: بعد الموت تنسى اللي صار قبل.</p>
+  <p>SB - Spawn Blocking: يمنع إغلاق السبون على اللاعبين.</p>
+  <p>DOS - Denial Of Service RP: يمنع تعطيل السيناريوهات أو تخريبها.</p>
+  <p>RDM - Random Death Match: يمنع القتل العشوائي بدون سبب.</p>
+
+  <div id="dynamicRules" class="extra-rules"></div>
+
+  <div class="buttons">
+    <a href="index.html">⬅ العودة للرئيسية</a>
+    <a href="mtasa://">🎮 العب الآن</a>
+  </div>
 </div>
 
 <script>
-window.onload = function() {
-    const saved = localStorage.getItem("serverRules");
-    if (saved) {
-        const lines = saved.split('\n');
-        lines.forEach(line => {
-            if(line.trim() !== "") {
-                const div = document.createElement("div");
-                div.className = "new-rule";
-                div.innerText = line;
-                document.getElementById("dynamicRules").appendChild(div);
-            }
-        });
+    // وظيفة جلب القوانين من الذاكرة وعرضها
+    window.onload = function() {
+        const dynamicArea = document.getElementById("dynamicRules");
+        // جلب البيانات من مصفوفة النظام الجديد (serverRulesArray)
+        const savedRules = JSON.parse(localStorage.getItem("serverRulesArray") || "[]");
+
+        if (savedRules.length > 0) {
+            savedRules.forEach(line => {
+                if(line.trim() !== "") {
+                    const ruleDiv = document.createElement("div");
+                    ruleDiv.className = "new-rule";
+                    ruleDiv.innerText = line;
+                    dynamicArea.appendChild(ruleDiv);
+                }
+            });
+        }
     }
-}
 </script>
+
 </body>
 </html>
