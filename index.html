@@ -16,6 +16,33 @@ body{
   overflow-x: hidden;
 }
 
+/* ستايل شريط الإعلانات الجديد */
+.news-ticker {
+    background: rgba(124, 58, 237, 0.7);
+    backdrop-filter: blur(5px);
+    color: white;
+    padding: 12px 0;
+    overflow: hidden;
+    position: relative;
+    border-bottom: 2px solid #a855f7;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    z-index: 100;
+}
+
+.ticker-content {
+    display: inline-block;
+    white-space: nowrap;
+    padding-right: 100%;
+    animation: ticker 25s linear infinite;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+@keyframes ticker {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+}
+
 .logo{
   margin-top:40px;
 }
@@ -177,6 +204,12 @@ footer{
 
 <body>
 
+<div class="news-ticker">
+    <div class="ticker-content" id="newsText">
+        مرحباً بكم في سيرفر RP City - نتمنى لكم قضاء وقت ممتع!
+    </div>
+</div>
+
 <div id="adminModal" class="admin-modal">
   <div class="modal-content">
     <h2>🔐 دخول الإدارة</h2>
@@ -220,6 +253,14 @@ footer{
 </footer>
 
 <script>
+// تحديث الإعلان من الذاكرة عند التحميل
+window.onload = function() {
+    const savedNews = localStorage.getItem("serverNews");
+    if (savedNews) {
+        document.getElementById("newsText").innerText = savedNews;
+    }
+}
+
 const sound = document.getElementById("clickSound");
 
 document.querySelectorAll("button, a").forEach(el=>{
@@ -250,7 +291,6 @@ function closeAdminModal() {
 
 function checkAdminPass() {
   const pass = document.getElementById("adminPass").value;
-  // تم تغيير كلمة السر هنا إلى r8p9
   if (pass === "r8p9") {
     window.location.href = "admin_panel.html";
   } else {
