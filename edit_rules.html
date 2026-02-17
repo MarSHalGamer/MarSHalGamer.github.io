@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>تعديل القوانين</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+<style>
+body { margin:0; font-family:'Cairo'; background:#0a0a0a; color:white; text-align:center; padding:40px; }
+textarea { width:90%; max-width:800px; height:300px; background:#111; color:white; border:2px solid #a855f7; border-radius:15px; padding:20px; font-family:'Cairo'; font-size:18px; }
+.btn-save { background:#7c3aed; color:white; border:none; padding:15px 50px; border-radius:10px; font-size:20px; cursor:pointer; margin-top:20px; font-family:'Cairo'; }
+</style>
+</head>
+<body>
+<h1>📝 أضف قوانينك الجديدة</h1>
+<textarea id="rulesInput" placeholder="اكتب القوانين هنا..."></textarea><br>
+<button class="btn-save" onclick="saveData()">حفظ ونشر القوانين</button><br>
+<a href="admin_panel.html" style="display:block; margin-top:20px; color:#888;">العودة للوحة الإدارة</a>
+
+<script>
+window.onload = function() { document.getElementById("rulesInput").value = localStorage.getItem("serverRules") || ""; }
+function saveData() {
+    localStorage.setItem("serverRules", document.getElementById("rulesInput").value);
+    alert("✅ تم الحفظ بنجاح!");
+}
+</script>
+</body>
+</html>
