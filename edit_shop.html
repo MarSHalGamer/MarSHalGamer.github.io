@@ -1,155 +1,99 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<title>إدارة المتجر - RP City</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-<style>
-    body { margin: 0; font-family: 'Cairo', sans-serif; background: radial-gradient(circle at top, #1a1b4b, #000000 80%); color: white; text-align: center; padding: 40px; }
-    .container { width: 90%; max-width: 700px; margin: 0 auto; background: rgba(0,0,0,0.6); padding: 30px; border-radius: 20px; border: 1px solid #a855f7; }
-    input, textarea { width: 100%; background: #000; color: white; border: 1px solid #444; border-radius: 10px; padding: 12px; font-family: 'Cairo'; margin: 10px 0; box-sizing: border-box; }
-    
-    /* ستايل منطقة رفع الصور */
-    .image-upload-area {
-        width: 100%; height: 150px; border: 2px dashed #a855f7; border-radius: 15px;
-        margin: 10px 0; display: flex; flex-direction: column; align-items: center;
-        justify-content: center; cursor: pointer; transition: 0.3s; background: rgba(0,0,0,0.3);
-        overflow: hidden; position: relative;
-    }
-    .image-upload-area:hover { background: rgba(168, 85, 247, 0.1); }
-    .image-upload-area img { width: 100%; height: 100%; object-fit: contain; display: none; }
-    .image-upload-area p { pointer-events: none; }
+<script>
+    // ⚠️ ضع بياناتك هنا
+    const BIN_ID = "ضع_هنا_BIN_ID";
+    const MASTER_KEY = "ضع_هنا_MASTER_KEY";
 
-    .btn { background: linear-gradient(135deg, #7c3aed, #1e1b4b); color: white; border: 2px solid #a855f7; padding: 12px; border-radius: 10px; cursor: pointer; width: 100%; font-family: 'Cairo'; font-size: 18px; margin-top: 10px; }
-    .item { background: rgba(255,255,255,0.05); padding: 15px; margin-top: 10px; border-radius: 10px; border-right: 4px solid #a855f7; display: flex; justify-content: space-between; align-items: center; text-align: right; }
-    .edit-btn { background: #0ea5e9; border:none; color:white; padding: 5px 10px; border-radius: 5px; cursor:pointer; margin-left:5px; font-family: 'Cairo'; }
-    .del-btn { background: #ef4444; border:none; color:white; padding: 5px 10px; border-radius: 5px; cursor:pointer; font-family: 'Cairo'; }
-    .item-info { display: flex; align-items: center; gap: 15px; }
-    .item-preview { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; border: 1px solid #a855f7; }
-</style>
-</head>
-<body>
-    <h1>🛒 إدارة منتجات المتجر</h1>
-    <div class="container">
-        <div class="image-upload-area" id="dropArea" onclick="document.getElementById('fileInput').click()">
-            <p id="uploadText">📁 اسحب الصورة هنا أو اضغط للاختيار</p>
-            <img id="previewImg" src="" alt="Preview">
-        </div>
-        <input type="file" id="fileInput" accept="image/*" style="display: none;" onchange="previewFile()">
-        
-        <input type="text" id="pName" placeholder="اسم الباقة/المنتج">
-        <input type="text" id="pPrice" placeholder="السعر (مثلاً: 50k كريدت)">
-        <textarea id="pDesc" placeholder="وصف المنتج (مميزاته)"></textarea>
-        <button class="btn" id="mainBtn" onclick="handleShop()">إضافة للمتجر</button>
-        <div id="pList" style="margin-top:20px;"></div>
-    </div>
-    <a href="admin_panel.html" style="display:block; margin-top:30px; color:#888; text-decoration:none;">⬅ عودة</a>
+    let currentImageData = "";
 
-    <script>
-        let shopArray = JSON.parse(localStorage.getItem("serverShopArray") || "[]");
-        let editIdx = -1;
-        let currentImageData = ""; // لتخزين كود الصورة
-
-        window.onload = draw;
-
-        // وظيفة معاينة الصورة عند اختيارها
-        function previewFile() {
-            const file = document.getElementById('fileInput').files[0];
-            const reader = new FileReader();
-            reader.onloadend = function() {
-                document.getElementById('previewImg').src = reader.result;
-                document.getElementById('previewImg').style.display = 'block';
-                document.getElementById('uploadText').style.display = 'none';
-                currentImageData = reader.result; // حفظ الصورة في متغير
-            }
-            if (file) reader.readAsDataURL(file);
-        }
-
-        // وظيفة السحب والإفلات
-        const dropArea = document.getElementById('dropArea');
-        dropArea.ondragover = (e) => { e.preventDefault(); dropArea.style.borderColor = "#fff"; };
-        dropArea.ondragleave = () => { dropArea.style.borderColor = "#a855f7"; };
-        dropArea.ondrop = (e) => {
-            e.preventDefault();
-            const file = e.dataTransfer.files[0];
-            document.getElementById('fileInput').files = e.dataTransfer.files;
-            previewFile();
-        };
-
-        function handleShop() {
-            const n = document.getElementById("pName"), p = document.getElementById("pPrice"), d = document.getElementById("pDesc");
-            if(!n.value || !p.value) return alert("يرجى ملء الاسم والسعر");
-
-            const item = { 
-                name: n.value, 
-                price: p.value, 
-                desc: d.value, 
-                image: currentImageData // إضافة الصورة للبيانات
-            };
-
-            if(editIdx === -1) {
-                shopArray.push(item);
-            } else {
-                shopArray[editIdx] = item;
-                editIdx = -1;
-                document.getElementById("mainBtn").innerText = "إضافة للمتجر";
-            }
-
-            localStorage.setItem("serverShopArray", JSON.stringify(shopArray));
-            resetForm();
-            draw();
-        }
-
-        function resetForm() {
-            document.getElementById("pName").value = "";
-            document.getElementById("pPrice").value = "";
-            document.getElementById("pDesc").value = "";
-            document.getElementById("previewImg").src = "";
-            document.getElementById("previewImg").style.display = "none";
-            document.getElementById("uploadText").style.display = "block";
-            currentImageData = "";
-        }
-
-        function draw() {
+    // جلب البيانات من السحابة وعرضها
+    async function draw() {
+        try {
+            const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+                headers: { "X-Master-Key": MASTER_KEY }
+            });
+            const result = await res.json();
+            const shopArray = result.record;
             const list = document.getElementById("pList");
             list.innerHTML = "";
             shopArray.forEach((it, i) => {
                 list.innerHTML += `<div class="item">
-                    <div class="item-info">
-                        <img src="${it.image || 'https://via.placeholder.com/50'}" class="item-preview">
-                        <span><strong>${it.name}</strong> (${it.price})</span>
-                    </div>
-                    <div>
-                        <button class="edit-btn" onclick="startEdit(${i})">تعديل</button>
-                        <button class="del-btn" onclick="del(${i})">حذف</button>
-                    </div>
+                    <span><strong>${it.name}</strong> (${it.price})</span>
+                    <button class="del-btn" onclick="delItem(${i})">حذف للكل</button>
                 </div>`;
             });
+        } catch(e) { console.error("فشل الجلب"); }
+    }
+
+    // ضغط الصورة وإضافتها
+    async function handleShop() {
+        const n = document.getElementById("pName").value;
+        const p = document.getElementById("pPrice").value;
+        const d = document.getElementById("pDesc").value;
+
+        if(!n || !p) return alert("يرجى كتابة الاسم والسعر");
+
+        // جلب الحالي ثم الإضافة عليه
+        const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+            headers: { "X-Master-Key": MASTER_KEY }
+        });
+        const result = await res.json();
+        let shopArray = result.record;
+
+        // إذا كانت أول باقة حقيقية، احذف "الباقة التجريبية"
+        if(shopArray.length === 1 && shopArray[0].name === "باقة تجريبية") {
+            shopArray = [];
         }
 
-        function startEdit(i) {
-            editIdx = i;
-            const item = shopArray[i];
-            document.getElementById("pName").value = item.name;
-            document.getElementById("pPrice").value = item.price;
-            document.getElementById("pDesc").value = item.desc;
-            if(item.image) {
-                document.getElementById("previewImg").src = item.image;
-                document.getElementById("previewImg").style.display = "block";
-                document.getElementById("uploadText").style.display = "none";
-                currentImageData = item.image;
-            }
-            document.getElementById("mainBtn").innerText = "تحديث الآن";
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        shopArray.push({ name: n, price: p, desc: d, image: currentImageData });
 
-        function del(i) {
-            if(confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
-                shopArray.splice(i,1);
-                localStorage.setItem("serverShopArray", JSON.stringify(shopArray));
-                draw();
-            }
-        }
-    </script>
-</body>
-</html>
+        // حفظ القائمة المحدثة في السحابة
+        await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+            method: 'PUT',
+            headers: { "Content-Type": "application/json", "X-Master-Key": MASTER_KEY },
+            body: JSON.stringify(shopArray)
+        });
+
+        alert("تم الحفظ بنجاح للجميع!");
+        location.reload();
+    }
+
+    async function delItem(index) {
+        if(!confirm("حذف نهائي؟")) return;
+        const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+            headers: { "X-Master-Key": MASTER_KEY }
+        });
+        const result = await res.json();
+        let shopArray = result.record;
+        shopArray.splice(index, 1);
+        await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+            method: 'PUT',
+            headers: { "Content-Type": "application/json", "X-Master-Key": MASTER_KEY },
+            body: JSON.stringify(shopArray)
+        });
+        draw();
+    }
+
+    function previewFile() {
+        const file = document.getElementById('fileInput').files[0];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = new Image();
+            img.src = e.target.result;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const maxWidth = 400; 
+                const scale = maxWidth / img.width;
+                canvas.width = maxWidth;
+                canvas.height = img.height * scale;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                currentImageData = canvas.toDataURL('image/jpeg', 0.6); // ضغط الصورة 60% لتقليل المساحة
+                document.getElementById('previewImg').src = currentImageData;
+                document.getElementById('previewImg').style.display = 'block';
+                document.getElementById('uploadText').style.display = 'none';
+            };
+        };
+        if (file) reader.readAsDataURL(file);
+    }
+    window.onload = draw;
+</script>
