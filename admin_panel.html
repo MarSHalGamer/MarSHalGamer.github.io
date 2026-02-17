@@ -5,18 +5,107 @@
 <title>لوحة الإدارة - RP City</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
 <style>
-body { margin:0; font-family:'Cairo'; background:radial-gradient(circle at top, #1a1b4b, #000); color:white; text-align:center; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; }
-.admin-card { background:rgba(124, 58, 237, 0.1); border:2px solid #a855f7; padding:40px; border-radius:20px; cursor:pointer; transition:0.3s; }
-.admin-card:hover { transform:translateY(-5px); box-shadow:0 0 25px #a855f7; }
-h1 { color:#a855f7; margin-bottom:40px; }
+    body {
+        margin: 0;
+        font-family: 'Cairo', sans-serif;
+        background: radial-gradient(circle at top, #1a1b4b, #000000 80%);
+        color: white;
+        text-align: center;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    h1 {
+        color: #a855f7;
+        font-size: 35px;
+        text-shadow: 0 0 20px rgba(168, 85, 247, 0.6);
+        margin-bottom: 50px;
+    }
+
+    .admin-grid {
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: 1000px;
+    }
+
+    /* تأثيرات الـ Hover التي طلبتها */
+    .admin-card {
+        background: rgba(124, 58, 237, 0.1);
+        border: 2px solid #a855f7;
+        padding: 40px;
+        border-radius: 25px;
+        width: 280px;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        text-decoration: none;
+        color: white;
+        box-shadow: 0 0 15px rgba(168, 85, 247, 0.2);
+    }
+
+    .admin-card:hover {
+        transform: translateY(-10px) scale(1.05);
+        background: rgba(124, 58, 237, 0.2);
+        box-shadow: 0 0 40px rgba(168, 85, 247, 0.8);
+        border-color: #c084fc;
+    }
+
+    .admin-card i {
+        font-size: 50px;
+        margin-bottom: 15px;
+        display: block;
+    }
+
+    .admin-card h3 {
+        margin: 10px 0 0;
+        font-size: 22px;
+    }
+
+    .back-home {
+        margin-top: 50px;
+        color: #888;
+        text-decoration: none;
+        font-size: 18px;
+        transition: 0.3s;
+    }
+
+    .back-home:hover {
+        color: #ff4d4d;
+        text-shadow: 0 0 10px #ff4d4d;
+    }
 </style>
 </head>
 <body>
-<h1>لوحة تحكم الإدارة العليا 🔐</h1>
-<div class="admin-card" onclick="location.href='edit_rules.html'">
-    <div style="font-size:50px;">📝</div>
-    <h3>إضافة قوانين</h3>
-</div>
-<a href="index.html" style="margin-top:30px; color:#888; text-decoration:none;">العودة للرئيسية</a>
+
+    <h1>🔐 لوحة تحكم الإدارة العليا</h1>
+
+    <div class="admin-grid">
+        
+        <a href="edit_rules.html" class="admin-card">
+            <span>📜</span>
+            <h3>إدارة القوانين</h3>
+            <p style="font-size: 14px; color: #ccc; margin-top: 10px;">إضافة أو حذف قوانين السيرفر</p>
+        </a>
+
+        <a href="edit_staff.html" class="admin-card">
+            <span>🛡️</span>
+            <h3>إدارة طاقم الإدارة</h3>
+            <p style="font-size: 14px; color: #ccc; margin-top: 10px;">إضافة أو حذف إداريين ورتب</p>
+        </a>
+
+        <div class="admin-card" style="opacity: 0.5; cursor: not-allowed;">
+            <span>💎</span>
+            <h3>إدارة الداعمين</h3>
+            <p style="font-size: 12px; color: #aaa;">قريباً...</p>
+        </div>
+
+    </div>
+
+    <a href="index.html" class="back-home">⬅ العودة للموقع الرئيسي</a>
+
 </body>
 </html>
