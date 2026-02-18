@@ -3,217 +3,36 @@
 <head>
 <meta charset="UTF-8">
 <title>RP City MTAS</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-
 <style>
-body{
-  margin:0;
-  font-family:'Cairo', sans-serif;
-  background:radial-gradient(circle at top, #6a0dad, #000000 70%);
-  color:white;
-  text-align:center;
-  overflow-x: hidden;
-}
-
-/* ستايل شريط الإعلانات الجديد */
-.news-ticker {
-    background: rgba(124, 58, 237, 0.7);
-    backdrop-filter: blur(5px);
-    color: white;
-    padding: 12px 0;
-    overflow: hidden;
-    position: relative;
-    border-bottom: 2px solid #a855f7;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    z-index: 100;
-}
-
-.ticker-content {
-    display: inline-block;
-    white-space: nowrap;
-    padding-right: 100%;
-    animation: ticker 25s linear infinite;
-    font-weight: bold;
-    font-size: 18px;
-}
-
-@keyframes ticker {
-    0% { transform: translateX(100%); }
-    100% { transform: translateX(-100%); }
-}
-
-.logo{
-  margin-top:40px;
-}
-.logo img{
-  width:200px;
-  filter:drop-shadow(0 0 20px #a855f7);
-}
-
-h1{
-  margin-top:10px;
-  font-size:38px;
-  letter-spacing:1px;
-}
-
-.buttons{
-  margin-top:50px;
-}
-
-.buttons a, .buttons button{
-  display:inline-block;
-  margin:15px;
-  padding:18px 45px;
-  background:linear-gradient(135deg,#7c3aed,#1e1b4b);
-  color:white;
-  text-decoration:none;
-  border-radius:15px;
-  font-size:22px;
-  border:none;
-  cursor:pointer;
-  box-shadow:0 0 15px rgba(168,85,247,0.5);
-  transition:0.3s;
-  font-family: 'Cairo', sans-serif;
-}
-
-.buttons a:hover, .buttons button:hover{
-  transform:translateY(-6px) scale(1.05);
-  box-shadow:0 0 30px rgba(168,85,247,0.9);
-}
-
-/* زر الأدمن */
-.admin-section {
-  margin-top: 50px;
-}
-
-.admin-btn {
-  background: none;
-  border: 1px solid #444;
-  color: #888;
-  padding: 10px 20px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: 0.3s;
-  font-family: 'Cairo', sans-serif;
-}
-
-.admin-btn:hover {
-  color: #a855f7;
-  border-color: #a855f7;
-}
-
-/* ستايل نافذة إدخال كلمة المرور الجديد */
-.admin-modal {
-  display: none;
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(8px);
-  z-index: 1000;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal-content {
-  background: #1a1b4b;
-  padding: 40px;
-  border-radius: 20px;
-  border: 2px solid #a855f7;
-  box-shadow: 0 0 40px rgba(168, 85, 247, 0.4);
-  width: 350px;
-  text-align: center;
-}
-
-.modal-content h2 {
-  margin-top: 0;
-  font-size: 22px;
-  color: #a855f7;
-}
-
-.modal-content input {
-  width: 100%;
-  padding: 12px;
-  margin: 20px 0;
-  border-radius: 10px;
-  border: 1px solid #444;
-  background: #000;
-  color: white;
-  font-family: 'Cairo', sans-serif;
-  text-align: center;
-  font-size: 18px;
-  box-sizing: border-box;
-}
-
-.modal-content input:focus {
-  border-color: #a855f7;
-  outline: none;
-  box-shadow: 0 0 10px #a855f7;
-}
-
-.modal-buttons {
-  display: flex;
-  gap: 10px;
-}
-
-.modal-confirm {
-  flex: 2;
-  background: #7c3aed;
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-family: 'Cairo', sans-serif;
-  font-weight: bold;
-}
-
-.modal-cancel {
-  flex: 1;
-  background: #444;
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-family: 'Cairo', sans-serif;
-}
-
-#toast{
-  position:fixed;
-  bottom:40px;
-  left:50%;
-  transform:translateX(-50%);
-  background:rgba(0,0,0,0.8);
-  padding:15px 35px;
-  border-radius:15px;
-  box-shadow:0 0 20px #9333ea;
-  display:none;
-  font-size:18px;
-}
-
-footer{
-  margin-top:60px;
-  padding:25px;
-  color:#aaa;
-  font-size:15px;
-}
+body{ margin:0; font-family:'Cairo', sans-serif; background:radial-gradient(circle at top, #6a0dad, #000000 70%); color:white; text-align:center; overflow-x: hidden; }
+.news-ticker { background: rgba(124, 58, 237, 0.7); backdrop-filter: blur(5px); color: white; padding: 12px 0; overflow: hidden; position: relative; border-bottom: 2px solid #a855f7; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 100; }
+.ticker-content { display: inline-block; white-space: nowrap; padding-right: 100%; animation: ticker 25s linear infinite; font-weight: bold; font-size: 18px; }
+@keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+.logo{ margin-top:40px; }
+.logo img{ width:200px; filter:drop-shadow(0 0 20px #a855f7); }
+h1{ margin-top:10px; font-size:38px; letter-spacing:1px; }
+.buttons{ margin-top:50px; }
+.buttons a, .buttons button{ display:inline-block; margin:10px; padding:15px 35px; background:linear-gradient(135deg,#7c3aed,#1e1b4b); color:white; text-decoration:none; border-radius:15px; font-size:20px; border:none; cursor:pointer; box-shadow:0 0 15px rgba(168,85,247,0.5); transition:0.3s; font-family: 'Cairo'; }
+.btn-ticket { background: linear-gradient(135deg, #2563eb, #1e1b4b) !important; border: 1px solid #60a5fa !important; }
+.buttons a:hover, .buttons button:hover{ transform:translateY(-6px) scale(1.05); box-shadow:0 0 30px rgba(168,85,247,0.9); }
+.admin-section { margin-top: 50px; }
+.admin-btn { background: none; border: 1px solid #444; color: #888; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-size: 16px; transition: 0.3s; font-family: 'Cairo'; }
+.admin-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); z-index: 1000; justify-content: center; align-items: center; }
+.modal-content { background: #1a1b4b; padding: 40px; border-radius: 20px; border: 2px solid #a855f7; width: 350px; text-align: center; }
+.modal-content input { width: 100%; padding: 12px; margin: 20px 0; border-radius: 10px; border: 1px solid #444; background: #000; color: white; text-align: center; }
+.modal-buttons { display: flex; gap: 10px; }
+.modal-confirm { flex: 2; background: #7c3aed; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; font-family: 'Cairo'; }
+.modal-cancel { flex: 1; background: #444; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; }
+#toast{ position:fixed; bottom:40px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.8); padding:15px 35px; border-radius:15px; box-shadow:0 0 20px #9333ea; display:none; font-size:18px; }
+footer{ margin-top:60px; padding:25px; color:#aaa; font-size:15px; }
 </style>
 </head>
-
 <body>
-
-<div class="news-ticker">
-    <div class="ticker-content" id="newsText">
-        جاري جلب آخر الأخبار من السحابة...
-    </div>
-</div>
-
+<div class="news-ticker"> <div class="ticker-content" id="newsText">جاري جلب آخر الأخبار من السحابة...</div> </div>
 <div id="adminModal" class="admin-modal">
   <div class="modal-content">
     <h2>🔐 دخول الإدارة</h2>
-    <p style="font-size: 14px; color: #ccc;">يرجى إدخال كلمة المرور للمتابعة</p>
     <input type="password" id="adminPass" placeholder="••••••••">
     <div class="modal-buttons">
       <button class="modal-confirm" onclick="checkAdminPass()">دخول</button>
@@ -221,106 +40,50 @@ footer{
     </div>
   </div>
 </div>
-
 <audio id="clickSound" src="click.mp3" preload="auto"></audio>
-
-<div class="logo">
-  <img src="logo.png" alt="RP City Logo">
-</div>
-
+<div class="logo"> <img src="logo.png" alt="RP City Logo"> </div>
 <h1>RP City Roleplay MTA.San</h1>
 <p>الموقع الرسمي لسيرفر RP City</p>
-
 <div class="buttons">
-  <a href="owners.html">🕍 القطاعات </a>
+  <a href="owners.html">🕍 القطاعات</a>
   <a href="admins.html">🛡️ الأدمن</a>
   <a href="supporters.html">💙 الداعمين</a>
   <a href="rules.html">📜 القوانين</a>
   <a href="shop.html">🛒 المتجر</a>
+  <a href="tickets.html" class="btn-ticket">🎧 الدعم الفني</a>
   <a href="mtasa://">🎮 العب الآن</a>
-
   <button onclick="copyDiscord()">🔗 رابط الدسكورد</button>
 </div>
-
-<div class="admin-section">
-    <button class="admin-btn" onclick="openAdminModal()">🔐 خاص بالادمن</button>
-</div>
-
+<div class="admin-section"> <button class="admin-btn" onclick="openAdminModal()">🔐 خاص بالادمن</button> </div>
 <div id="toast">✅ تم نسخ رابط الدسكورد</div>
-
-<footer>
-© 2026 RP City MTAS — جميع الحقوق محفوظة
-</footer>
+<footer>© 2026 RP City MTAS — جميع الحقوق محفوظة</footer>
 
 <script>
-// --- إعدادات السحابة للإعلانات ---
 const BIN_ID_NEWS = "69957a72ae596e708f33b8b9";
 const MASTER_KEY = "$2a$10$EVJpa1kkUQx4JG6CPhwT8eMpLADFaWQc7iR5SShpZRDJSGC2sThvi";
 
 async function loadCloudNews() {
-    const newsText = document.getElementById("newsText");
     try {
-        const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID_NEWS}/latest`, {
-            headers: { "X-Master-Key": MASTER_KEY }
-        });
+        const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID_NEWS}/latest`, { headers: { "X-Master-Key": MASTER_KEY } });
         const data = await res.json();
-        if(data.record && data.record.text) {
-            newsText.innerText = data.record.text;
-        }
-    } catch (e) {
-        newsText.innerText = "مرحباً بكم في RP City - نتمنى لكم قضاء وقت ممتع!";
-    }
+        if(data.record && data.record.text) { document.getElementById("newsText").innerText = data.record.text; }
+    } catch (e) { document.getElementById("newsText").innerText = "مرحباً بكم في RP City!"; }
 }
-
-// تشغيل جلب الأخبار عند تحميل الصفحة
-window.onload = function() {
-    loadCloudNews();
-}
-
-const sound = document.getElementById("clickSound");
-
-document.querySelectorAll("button, a").forEach(el=>{
-  el.addEventListener("click", ()=>{
-    if(sound) { sound.currentTime = 0; sound.play(); }
-  });
-});
+window.onload = loadCloudNews;
 
 function copyDiscord(){
-  const discordLink = "https://discord.gg/7U7QF4f5VD";
-  navigator.clipboard.writeText(discordLink).then(()=>{
+  navigator.clipboard.writeText("https://discord.gg/7U7QF4f5VD").then(()=>{
     const toast = document.getElementById("toast");
     toast.style.display = "block";
     setTimeout(()=>{ toast.style.display = "none"; }, 2500);
   });
 }
-
-/* وظائف النافذة */
-function openAdminModal() {
-  document.getElementById("adminModal").style.display = "flex";
-  document.getElementById("adminPass").focus();
-}
-
-function closeAdminModal() {
-  document.getElementById("adminModal").style.display = "none";
-  document.getElementById("adminPass").value = "";
-}
-
+function openAdminModal() { document.getElementById("adminModal").style.display = "flex"; document.getElementById("adminPass").focus(); }
+function closeAdminModal() { document.getElementById("adminModal").style.display = "none"; }
 function checkAdminPass() {
-  const pass = document.getElementById("adminPass").value;
-  if (pass === "r8p9") {
-    window.location.href = "admin_panel.html";
-  } else {
-    alert("كلمة المرور خاطئة!");
-    document.getElementById("adminPass").value = "";
-  }
+  if (document.getElementById("adminPass").value === "r8p9") { window.location.href = "admin_panel.html"; }
+  else { alert("كلمة المرور خاطئة!"); }
 }
-
-document.getElementById("adminPass").addEventListener("keyup", function(event) {
-  if (event.key === "Enter") {
-    checkAdminPass();
-  }
-});
 </script>
-
 </body>
 </html>
