@@ -23,7 +23,6 @@
     }
     textarea:focus { border-color: #a855f7; outline: none; box-shadow: 0 0 10px rgba(168, 85, 247, 0.5); }
 
-    /* ستايل زر الحفظ مع تأثير الماوس */
     .save-btn {
         background: linear-gradient(135deg, #7c3aed, #1e1b4b);
         color: white; border: 2px solid #a855f7; padding: 12px 40px; border-radius: 10px;
@@ -34,20 +33,16 @@
     .save-btn:hover {
         transform: translateY(-3px) scale(1.05);
         box-shadow: 0 0 25px rgba(168, 85, 247, 0.8);
-        background: linear-gradient(135deg, #a855f7, #1e1b4b);
     }
+    .save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    /* قائمة القوانين المحفوظة */
     .rules-list { margin-top: 30px; text-align: right; }
     .rule-item {
         background: rgba(255,255,255,0.05); padding: 15px; margin: 10px 0;
         border-radius: 10px; border-right: 4px solid #a855f7;
         display: flex; justify-content: space-between; align-items: center;
-        transition: 0.3s;
     }
-    .rule-item:hover { background: rgba(168, 85, 247, 0.1); }
 
-    /* ستايل زر الحذف مع تأثير الماوس */
     .delete-btn {
         background: #444; color: white; border: 1px solid #ef4444; padding: 6px 18px;
         border-radius: 8px; cursor: pointer; font-family: 'Cairo'; font-size: 14px;
@@ -55,59 +50,96 @@
     }
     .delete-btn:hover {
         background: #ef4444;
-        transform: scale(1.1);
         box-shadow: 0 0 15px rgba(239, 68, 68, 0.6);
     }
 
-    /* نافذة التنبيه الاحترافية */
     #customToast {
         position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
         background: #22c55e; color: white; padding: 15px 30px;
-        border-radius: 12px; box-shadow: 0 0 20px rgba(34, 197, 94, 0.4);
-        display: none; z-index: 1000; font-weight: bold;
-        font-family: 'Cairo';
+        border-radius: 12px; display: none; z-index: 1000; font-family: 'Cairo';
     }
 
     .back-btn { display:block; margin-top:30px; color:#888; text-decoration:none; transition: 0.3s; }
-    .back-btn:hover { color: white; transform: translateX(-5px); }
+    .back-btn:hover { color: white; }
 </style>
 </head>
 <body>
 
-    <div id="customToast">✅ تم حفظ القانون بنجاح!</div>
+    <div id="customToast">✅ تم التحديث بنجاح للسحابة!</div>
 
-    <h1>📝 إدارة قوانين السيرفر</h1>
+    <h1>📝 إدارة قوانين السيرفر (سحابي)</h1>
     
     <div class="container">
         <textarea id="ruleInput" placeholder="اكتب القانون الجديد هنا..."></textarea>
-        <button class="save-btn" onclick="addNewRule()">حفظ القانون</button>
+        <button class="save-btn" id="mainBtn" onclick="addNewRule()">حفظ ونشر القانون</button>
         
-        <div class="rules-list" id="rulesList">
-            </div>
+        <div class="rules-list" id="rulesList">جاري تحميل القوانين من السحابة...</div>
     </div>
 
     <a href="admin_panel.html" class="back-btn">⬅ العودة للوحة الإدارة</a>
 
     <script>
-        let rulesArray = JSON.parse(localStorage.getItem("serverRulesArray") || "[]");
+        // ⚠️ ضع بيانات الـ Bin الخاص بالقوانين هنا
+        const BIN_ID = "69957ce0d0ea881f40c35438";
+        const MASTER_KEY = "$2a$10$EVJpa1kkUQx4JG6CPhwT8eMpLADFaWQc7iR5SShpZRDJSGC2sThvi";
 
-        window.onload = displayRules;
+        let rulesArray = [];
 
-        function addNewRule() {
+        window.onload = loadRulesFromCloud;
+
+        async function loadRulesFromCloud() {
+            const list = document.getElementById("rulesList");
+            try {
+                const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+                    headers: { "X-Master-Key": MASTER_KEY }
+                });
+                const result = await res.json();
+                rulesArray = result.record || [];
+                displayRules();
+            } catch (e) {
+                list.innerHTML = "<h3>فشل في الاتصال بالسحابة</h3>";
+            }
+        }
+
+        async function saveRulesToCloud() {
+            try {
+                await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+                    method: 'PUT',
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Master-Key": MASTER_KEY
+                    },
+                    body: JSON.stringify(rulesArray)
+                });
+                showToast();
+            } catch (e) {
+                alert("حدث خطأ أثناء الحفظ في السحابة");
+            }
+        }
+
+        async function addNewRule() {
             const input = document.getElementById("ruleInput");
+            const btn = document.getElementById("mainBtn");
+
             if (input.value.trim() === "") return;
 
+            btn.disabled = true;
+            btn.innerText = "جاري الحفظ...";
+
+            // إضافة القانون الجديد
             rulesArray.push(input.value);
-            localStorage.setItem("serverRulesArray", JSON.stringify(rulesArray));
             
+            await saveRulesToCloud();
+
             input.value = "";
-            showToast();
+            btn.disabled = false;
+            btn.innerText = "حفظ ونشر القانون";
             displayRules();
         }
 
         function displayRules() {
             const list = document.getElementById("rulesList");
-            list.innerHTML = rulesArray.length > 0 ? "<h3>القوانين الحالية:</h3>" : "<h3>لا توجد قوانين مضافة حالياً.</h3>";
+            list.innerHTML = rulesArray.length > 0 ? "<h3>القوانين الحالية:</h3>" : "<h3>لا توجد قوانين مضافة.</h3>";
             
             rulesArray.forEach((rule, index) => {
                 list.innerHTML += `
@@ -119,10 +151,12 @@
             });
         }
 
-        function deleteRule(index) {
-            rulesArray.splice(index, 1);
-            localStorage.setItem("serverRulesArray", JSON.stringify(rulesArray));
-            displayRules();
+        async function deleteRule(index) {
+            if(confirm("هل تريد حذف هذا القانون من عند الجميع؟")) {
+                rulesArray.splice(index, 1);
+                await saveRulesToCloud();
+                displayRules();
+            }
         }
 
         function showToast() {
