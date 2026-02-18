@@ -56,49 +56,92 @@
 </style>
 </head>
 <body>
-    <div id="customToast">✅ تم العملية بنجاح!</div>
-    <h1>🛡️ إدارة طاقم السيرفر</h1>
+    <div id="customToast">✅ تمت العملية بنجاح!</div>
+    <h1>🛡️ إدارة طاقم السيرفر (سحابي)</h1>
     <div class="container">
         <input type="text" id="staffName" placeholder="اسم الإداري">
         <input type="text" id="staffRank" placeholder="الرتبة (مثلاً: مؤسس)">
         <button class="save-btn" id="mainBtn" onclick="addStaff()">إضافة للطاقم</button>
-        <div class="staff-list" id="staffList"></div>
+        <div class="staff-list" id="staffList">جاري تحميل الطاقم من السحابة...</div>
     </div>
     <a href="admin_panel.html" style="display:block; margin-top:30px; color:#888; text-decoration:none;">⬅ العودة للوحة الإدارة</a>
 
     <script>
-        let staffArray = JSON.parse(localStorage.getItem("serverStaffArray") || "[]");
-        let editIndex = -1; // متغير لمعرفة هل نحن في وضع التعديل أم الإضافة
+        // ⚠️ ضع بيانات السحابة الخاصة بالطاقم هنا
+        const BIN_ID = "6995780ad0ea881f40c3493e";
+        const MASTER_KEY = "$2a$10$EVJpa1kkUQx4JG6CPhwT8eMpLADFaWQc7iR5SShpZRDJSGC2sThvi";
+
+        let staffArray = [];
+        let editIndex = -1;
 
         window.onload = displayStaff;
 
-        function addStaff() {
+        // وظيفة جلب الطاقم من السحابة
+        async function loadStaff() {
+            try {
+                const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+                    headers: { "X-Master-Key": MASTER_KEY }
+                });
+                const data = await res.json();
+                staffArray = data.record || [];
+            } catch (e) {
+                console.error("فشل الاتصال بالسحابه");
+            }
+        }
+
+        // وظيفة حفظ الطاقم في السحابة
+        async function saveStaff() {
+            try {
+                await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+                    method: 'PUT',
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Master-Key": MASTER_KEY
+                    },
+                    body: JSON.stringify(staffArray)
+                });
+            } catch (e) {
+                alert("حدث خطأ أثناء الحفظ");
+            }
+        }
+
+        async function addStaff() {
             const name = document.getElementById("staffName");
             const rank = document.getElementById("staffRank");
             const mainBtn = document.getElementById("mainBtn");
 
             if (name.value === "" || rank.value === "") return;
 
+            mainBtn.innerText = "جاري الحفظ...";
+            mainBtn.disabled = true;
+
             if (editIndex === -1) {
-                // وضع الإضافة
+                // وضع الإضافة (مسح البيانات التجريبية إذا وجدت)
+                if(staffArray.length === 1 && staffArray[0].name === "اسم تجريبي") staffArray = [];
                 staffArray.push({ name: name.value, rank: rank.value });
             } else {
                 // وضع التعديل
                 staffArray[editIndex] = { name: name.value, rank: rank.value };
                 editIndex = -1;
-                mainBtn.innerText = "إضافة للطاقم";
                 mainBtn.style.background = "linear-gradient(135deg, #7c3aed, #1e1b4b)";
             }
 
-            localStorage.setItem("serverStaffArray", JSON.stringify(staffArray));
+            await saveStaff(); // حفظ في السحابة
+
+            mainBtn.innerText = "إضافة للطاقم";
+            mainBtn.disabled = false;
             name.value = ""; rank.value = "";
-            showToast(); displayStaff();
+            showToast(); 
+            displayStaff();
         }
 
-        function displayStaff() {
+        async function displayStaff() {
             const list = document.getElementById("staffList");
+            await loadStaff(); // جلب أحدث البيانات
+            
             list.innerHTML = staffArray.length > 0 ? "<h3>الطاقم الحالي:</h3>" : "<h3>لا يوجد إداريين مضافين.</h3>";
             staffArray.forEach((member, index) => {
+                if(member.name === "اسم تجريبي") return; // تجاهل البيانات التجريبية
                 list.innerHTML += `
                     <div class="staff-item">
                         <span><strong>${member.name}</strong> - ${member.rank}</span>
@@ -115,23 +158,19 @@
             const rank = document.getElementById("staffRank");
             const mainBtn = document.getElementById("mainBtn");
 
-            // تعبئة الحقول بالبيانات المختارة
             name.value = staffArray[index].name;
             rank.value = staffArray[index].rank;
             
-            // تغيير حالة الزر
             editIndex = index;
             mainBtn.innerText = "تحديث البيانات";
             mainBtn.style.background = "#0ea5e9";
-            
-            // رفع الصفحة للأعلى للبدء في التعديل
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function deleteMember(index) {
-            if(confirm("هل أنت متأكد من حذف هذا الإداري؟")) {
+        async function deleteMember(index) {
+            if(confirm("هل أنت متأكد من حذف هذا الإداري من عند الجميع؟")) {
                 staffArray.splice(index, 1);
-                localStorage.setItem("serverStaffArray", JSON.stringify(staffArray));
+                await saveStaff();
                 displayStaff();
             }
         }
