@@ -206,7 +206,7 @@ footer{
 
 <div class="news-ticker">
     <div class="ticker-content" id="newsText">
-        مرحباً بكم في سيرفر RP City - نتمنى لكم قضاء وقت ممتع!
+        جاري جلب آخر الأخبار من السحابة...
     </div>
 </div>
 
@@ -253,12 +253,28 @@ footer{
 </footer>
 
 <script>
-// تحديث الإعلان من الذاكرة عند التحميل
-window.onload = function() {
-    const savedNews = localStorage.getItem("serverNews");
-    if (savedNews) {
-        document.getElementById("newsText").innerText = savedNews;
+// --- إعدادات السحابة للإعلانات ---
+const BIN_ID_NEWS = "69957a72ae596e708f33b8b9";
+const MASTER_KEY = "$2a$10$EVJpa1kkUQx4JG6CPhwT8eMpLADFaWQc7iR5SShpZRDJSGC2sThvi";
+
+async function loadCloudNews() {
+    const newsText = document.getElementById("newsText");
+    try {
+        const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID_NEWS}/latest`, {
+            headers: { "X-Master-Key": MASTER_KEY }
+        });
+        const data = await res.json();
+        if(data.record && data.record.text) {
+            newsText.innerText = data.record.text;
+        }
+    } catch (e) {
+        newsText.innerText = "مرحباً بكم في RP City - نتمنى لكم قضاء وقت ممتع!";
     }
+}
+
+// تشغيل جلب الأخبار عند تحميل الصفحة
+window.onload = function() {
+    loadCloudNews();
 }
 
 const sound = document.getElementById("clickSound");
@@ -278,7 +294,7 @@ function copyDiscord(){
   });
 }
 
-/* وظائف النافذة الجديدة */
+/* وظائف النافذة */
 function openAdminModal() {
   document.getElementById("adminModal").style.display = "flex";
   document.getElementById("adminPass").focus();
@@ -299,7 +315,6 @@ function checkAdminPass() {
   }
 }
 
-// إغلاق النافذة عند الضغط على Enter
 document.getElementById("adminPass").addEventListener("keyup", function(event) {
   if (event.key === "Enter") {
     checkAdminPass();
