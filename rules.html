@@ -84,7 +84,8 @@ h1{
   <h1>📜 قوانين سيرفر RP City</h1>
 
   <div id="dynamicRules" class="extra-rules">
-      </div>
+      <p style="text-align:center; color:#888;">جاري جلب القوانين من السحابة...</p>
+  </div>
 
   <div class="buttons">
     <a href="index.html">⬅ العودة للرئيسية</a>
@@ -93,22 +94,48 @@ h1{
 </div>
 
 <script>
-    window.onload = function() {
-        const dynamicArea = document.getElementById("dynamicRules");
-        const savedRules = JSON.parse(localStorage.getItem("serverRulesArray") || "[]");
+    // ⚠️ استخدم نفس BIN_ID الذي خصصته للقوانين في لوحة الإدارة
+    const BIN_ID = "69957ce0d0ea881f40c35438"; 
+    const MASTER_KEY = "$2a$10$EVJpa1kkUQx4JG6CPhwT8eMpLADFaWQc7iR5SShpZRDJSGC2sThvi"; 
 
-        if (savedRules.length > 0) {
-            dynamicArea.innerHTML = ""; // مسح أي محتوى تجريبي
-            savedRules.forEach(line => {
-                if(line.trim() !== "") {
-                    const ruleDiv = document.createElement("div");
-                    ruleDiv.className = "new-rule";
-                    ruleDiv.innerText = line;
-                    dynamicArea.appendChild(ruleDiv);
-                }
+    window.onload = async function() {
+        const dynamicArea = document.getElementById("dynamicRules");
+
+        try {
+            // جلب البيانات من JSONBin
+            const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+                headers: { "X-Master-Key": MASTER_KEY }
             });
-        } else {
-            dynamicArea.innerHTML = "<p style='text-align:center; color:#888;'>لا توجد قوانين مضافة حالياً. يرجى مراجعة الإدارة.</p>";
+            
+            const result = await res.json();
+            const savedRules = result.record || [];
+
+            if (savedRules.length > 0) {
+                dynamicArea.innerHTML = ""; // مسح رسالة التحميل
+                
+                savedRules.forEach(line => {
+                    if(line && line.trim() !== "") {
+                        // تجاهل أي سطر تجريبي إذا وجد
+                        if(line === "قانون تجريبي") return;
+
+                        const ruleDiv = document.createElement("div");
+                        ruleDiv.className = "new-rule";
+                        ruleDiv.innerText = line;
+                        dynamicArea.appendChild(ruleDiv);
+                    }
+                });
+
+                // حالة إذا كانت السحابة فارغة بعد الفلترة
+                if(dynamicArea.innerHTML === "") {
+                    dynamicArea.innerHTML = "<p style='text-align:center; color:#888;'>لا توجد قوانين مضافة حالياً.</p>";
+                }
+
+            } else {
+                dynamicArea.innerHTML = "<p style='text-align:center; color:#888;'>لا توجد قوانين مضافة حالياً.</p>";
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            dynamicArea.innerHTML = "<p style='text-align:center; color:#ef4444;'>حدث خطأ أثناء تحميل القوانين من السحابة.</p>";
         }
     }
 </script>
