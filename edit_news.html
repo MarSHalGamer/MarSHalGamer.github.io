@@ -26,6 +26,7 @@
         font-size: 18px; cursor: pointer; font-family: 'Cairo'; margin-top: 20px; transition: 0.3s;
     }
     .save-btn:hover { transform: translateY(-3px); box-shadow: 0 0 20px #a855f7; }
+    .save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
     #customToast {
         position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
@@ -35,25 +36,59 @@
 </style>
 </head>
 <body>
-    <div id="customToast">✅ تم تحديث شريط الأخبار!</div>
-    <h1>📢 تغيير إعلان السيرفر</h1>
+    <div id="customToast">✅ تم تحديث شريط الأخبار للجميع!</div>
+    <h1>📢 تغيير إعلان السيرفر (سحابي)</h1>
     <div class="container">
-        <p>اكتب الإعلان الذي سيظهر في الشريط المتحرك:</p>
-        <input type="text" id="newsInput" placeholder="مثال: تم فتح التقديم على رتبة شرطي..">
-        <button class="save-btn" onclick="saveNews()">حفظ ونشر</button>
+        <p>اكتب الإعلان الذي سيظهر في الشريط المتحرك عند كل اللاعبين:</p>
+        <input type="text" id="newsInput" placeholder="جاري التحميل من السحابة...">
+        <button class="save-btn" id="saveBtn" onclick="saveNews()">حفظ ونشر للكل</button>
     </div>
     <a href="admin_panel.html" style="display:block; margin-top:30px; color:#888; text-decoration:none;">⬅ العودة للوحة الإدارة</a>
 
     <script>
-        // تحميل الخبر الحالي عند فتح الصفحة
-        window.onload = function() {
-            document.getElementById("newsInput").value = localStorage.getItem("serverNews") || "";
+        // ⚠️ ضع بيانات السحابة المخصصة للإعلانات هنا
+        const BIN_ID = "69957a72ae596e708f33b8b9";
+        const MASTER_KEY = "$2a$10$EVJpa1kkUQx4JG6CPhwT8eMpLADFaWQc7iR5SShpZRDJSGC2sThvi";
+
+        // تحميل الخبر الحالي من السحابة عند فتح الصفحة
+        window.onload = async function() {
+            const input = document.getElementById("newsInput");
+            try {
+                const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+                    headers: { "X-Master-Key": MASTER_KEY }
+                });
+                const data = await res.json();
+                // نفترض أن البيانات مخزنة كـ { "text": "الخبر" }
+                input.value = data.record.text || "";
+                input.placeholder = "اكتب الإعلان هنا..";
+            } catch (e) {
+                input.placeholder = "فشل التحميل من السحابة";
+            }
         }
 
-        function saveNews() {
-            const news = document.getElementById("newsInput").value;
-            localStorage.setItem("serverNews", news);
-            showToast();
+        async function saveNews() {
+            const newsValue = document.getElementById("newsInput").value;
+            const btn = document.getElementById("saveBtn");
+
+            btn.innerText = "جاري النشر...";
+            btn.disabled = true;
+
+            try {
+                await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+                    method: 'PUT',
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Master-Key": MASTER_KEY
+                    },
+                    body: JSON.stringify({ text: newsValue })
+                });
+                showToast();
+            } catch (e) {
+                alert("فشل في تحديث السحابة");
+            } finally {
+                btn.innerText = "حفظ ونشر للكل";
+                btn.disabled = false;
+            }
         }
 
         function showToast() {
