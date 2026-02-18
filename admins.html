@@ -38,7 +38,7 @@ h1 {
   margin-bottom: 30px;
 }
 
-/* تنسيق بطاقة الإداري الجديد */
+/* تنسيق بطاقة الإداري */
 .staff-card {
   background: rgba(124, 58, 237, 0.1);
   border: 1px solid #7c3aed;
@@ -101,7 +101,7 @@ a:hover {
   <h1>🛡️ طاقم إدارة RP City</h1>
 
   <div id="staffDisplay">
-    <p style="color: #888;">جاري تحميل قائمة الطاقم...</p>
+    <p style="color: #888;">جاري جلب قائمة الطاقم من السحابة...</p>
   </div>
 
   <hr>
@@ -114,24 +114,49 @@ a:hover {
 </div>
 
 <script>
-    window.onload = function() {
-        const display = document.getElementById("staffDisplay");
-        // جلب البيانات من مصفوفة الإدارة (serverStaffArray)
-        const savedStaff = JSON.parse(localStorage.getItem("serverStaffArray") || "[]");
+    // ⚠️ يجب أن تكون البيانات مطابقة لصفحة إدارة الطاقم
+    const BIN_ID = "6995780ad0ea881f40c3493e"; 
+    const MASTER_KEY = "$2a$10$EVJpa1kkUQx4JG6CPhwT8eMpLADFaWQc7iR5SShpZRDJSGC2sThvi"; 
 
-        if (savedStaff.length > 0) {
-            display.innerHTML = ""; // مسح رسالة التحميل
-            savedStaff.forEach(member => {
-                const card = document.createElement("div");
-                card.className = "staff-card";
-                card.innerHTML = `
-                    <span class="staff-name">${member.name}</span>
-                    <span class="staff-rank">${member.rank}</span>
-                `;
-                display.innerHTML += card.outerHTML;
+    window.onload = async function() {
+        const display = document.getElementById("staffDisplay");
+        
+        try {
+            // جلب بيانات الطاقم من JSONBin
+            const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+                headers: { "X-Master-Key": MASTER_KEY }
             });
-        } else {
-            display.innerHTML = "<p style='color:#888;'>لا يوجد طاقم إدارة مسجل حالياً.</p>";
+            
+            const result = await res.json();
+            const savedStaff = result.record || [];
+
+            if (savedStaff.length > 0) {
+                display.innerHTML = ""; // مسح رسالة التحميل
+                
+                savedStaff.forEach(member => {
+                    // تجاهل الاسم التجريبي إذا كان موجوداً
+                    if(member.name === "اسم تجريبي") return;
+
+                    const card = document.createElement("div");
+                    card.className = "staff-card";
+                    card.innerHTML = `
+                        <span class="staff-name">${member.name}</span>
+                        <span class="staff-rank">${member.rank}</span>
+                    `;
+                    display.appendChild(card);
+                });
+
+                // حالة إذا كانت القائمة تحتوي على الاسم التجريبي فقط
+                if(display.innerHTML === "") {
+                    display.innerHTML = "<p style='color:#888;'>لا يوجد طاقم إدارة مسجل حالياً.</p>";
+                }
+
+            } else {
+                display.innerHTML = "<p style='color:#888;'>لا يوجد طاقم إدارة مسجل حالياً.</p>";
+            }
+        } catch (error) {
+            console.error("خطأ في الاتصال:", error);
+            display.innerHTML = "<p style='color:#ef4444;'>حدث خطأ أثناء تحميل البيانات  .</p>";
         }
     }
 </script>
