@@ -14,10 +14,20 @@
         input { width: 60%; padding: 10px; border-radius: 5px; border: none; font-family: 'Cairo'; }
         .reply-btn { background: #22c55e; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-family: 'Cairo'; }
         .del-btn { background: #ef4444; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+        /* ستايل زر التحديث الجديد */
+        .refresh-top { margin: 20px auto; max-width: 800px; display: flex; align-items: center; justify-content: center; gap: 15px; background: #111; padding: 15px; border-radius: 12px; border: 1px dashed #444; }
+        .refresh-btn { background: #a855f7; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-family: 'Cairo'; font-weight: bold; }
+        .refresh-msg { color: #a855f7; font-weight: bold; }
     </style>
 </head>
 <body>
-    <h1>📩 نظام إدارة التيكيتات</h1>
+    <h1>📩 إدارة مشاكل اللاعبين</h1>
+
+    <div class="refresh-top">
+        <button class="refresh-btn" onclick="location.reload()">🔄 تحديث القائمة</button>
+        <span class="refresh-msg">حدث الصفحة لترى رد اللاعب</span>
+    </div>
+
     <div id="ticketsList">جاري التحميل...</div>
     <a href="admin_panel.html" style="color:#888; text-decoration:none;">⬅ عودة للوحة الإدارة</a>
 
@@ -29,41 +39,31 @@
         async function loadTickets() {
             try {
                 const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, { headers: { "X-Master-Key": MASTER_KEY } });
-                const data = await res.json();
-                allTickets = data.record || [];
-                displayTickets();
+                const data = await res.json(); allTickets = data.record || []; displayTickets();
             } catch (e) { document.getElementById("ticketsList").innerHTML = "خطأ في السحابة"; }
         }
 
         function displayTickets() {
             const list = document.getElementById("ticketsList");
-            list.innerHTML = allTickets.length === 0 ? "<h3>لا يوجد طلبات دعم حالياً</h3>" : "";
+            list.innerHTML = allTickets.length === 0 ? "<h3>لا يوجد تيكيتات مفتوحة حالياً</h3>" : "";
             allTickets.forEach((t, i) => {
                 let chat = t.messages.map(m => `<div class="msg ${m.role==='admin'?'admin-msg':'player-msg'}"><strong>${m.role==='admin'?'أنت':'اللاعب'}:</strong> ${m.text}</div>`).join('');
                 list.innerHTML += `<div class="ticket-item">
                     <h3>لاعب: ${t.playerName}</h3><div class="chat-box">${chat}</div>
                     <input type="text" id="rep-${i}" placeholder="رد على اللاعب...">
                     <button class="reply-btn" onclick="sendReply(${i})">إرسال</button>
-                    <button class="del-btn" onclick="deleteTicket(${i})">حذف</button>
+                    <button class="del-btn" onclick="deleteTicket(${i})">حذف التيكيت</button>
                 </div>`;
             });
         }
 
         async function sendReply(i) {
-            const text = document.getElementById(`rep-${i}`).value;
-            if(!text) return;
-            allTickets[i].messages.push({ role: 'admin', text: text });
-            await updateCloud();
-            loadTickets();
+            const text = document.getElementById(`rep-${i}`).value; if(!text) return;
+            allTickets[i].messages.push({ role: 'admin', text: text }); await updateCloud(); loadTickets();
         }
 
-        async function deleteTicket(i) {
-            if(confirm("حذف التيكيت؟")) { allTickets.splice(i, 1); await updateCloud(); loadTickets(); }
-        }
-
-        async function updateCloud() {
-            await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, { method: 'PUT', headers: { "Content-Type": "application/json", "X-Master-Key": MASTER_KEY }, body: JSON.stringify(allTickets) });
-        }
+        async function deleteTicket(i) { if(confirm("هل تريد حذف التيكيت نهائياً؟")) { allTickets.splice(i, 1); await updateCloud(); loadTickets(); } }
+        async function updateCloud() { await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, { method: 'PUT', headers: { "Content-Type": "application/json", "X-Master-Key": MASTER_KEY }, body: JSON.stringify(allTickets) }); }
         window.onload = loadTickets;
     </script>
 </body>
