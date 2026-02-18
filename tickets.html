@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>الدعم الفني - RP City</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { margin: 0; font-family: 'Cairo', sans-serif; background: radial-gradient(circle at top, #4c1d95, #000 70%); color: white; text-align: center; padding: 20px; }
+        .box { max-width: 600px; margin: 40px auto; background: rgba(0,0,0,0.6); padding: 30px; border-radius: 20px; border: 1px solid #a855f7; }
+        input, textarea { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; background: #000; color: white; border: 1px solid #444; box-sizing: border-box; font-family: 'Cairo'; }
+        .btn { background: #7c3aed; color: white; border: none; padding: 15px 30px; border-radius: 10px; cursor: pointer; width: 100%; font-weight: bold; font-family: 'Cairo'; }
+        .chat-area { margin-top: 20px; text-align: right; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; max-height: 400px; overflow-y: auto; }
+        .msg { padding: 10px; border-radius: 8px; margin-bottom: 10px; line-height: 1.4; }
+        .admin-reply { background: #4c1d95; border-right: 4px solid #a855f7; }
+        .player-msg { background: #333; border-right: 4px solid #444; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>🎧 الدعم الفني</h1>
+        <div id="setupArea">
+            <input type="text" id="pName" placeholder="اسمك داخل اللعبة">
+            <textarea id="pProblem" placeholder="اشرح مشكلتك بالتفصيل..."></textarea>
+            <button class="btn" onclick="openTicket()">إرسال التيكيت</button>
+        </div>
+        <div id="chatArea" style="display:none;">
+            <h3>محادثة الدعم الفني</h3>
+            <div id="messages" class="chat-area"></div>
+            <input type="text" id="newMsg" placeholder="اكتب ردك هنا...">
+            <button class="btn" onclick="sendPlayerReply()">إرسال الرد</button>
+        </div>
+    </div>
+    <a href="index.html" style="color:#888; text-decoration:none;">⬅ العودة للرئيسية</a>
+
+    <script>
+        const BIN_ID = "ضع_هنا_BIN_ID_التيكيتات";
+        const MASTER_KEY = "$2a$10$EVJpa1kkUQx4JG6CPhwT8eMpLADFaWQc7iR5SShpZRDJSGC2sThvi";
+        let myTicketId = localStorage.getItem("activeTicketId");
+
+        async function openTicket() {
+            const name = document.getElementById("pName").value;
+            const prob = document.getElementById("pProblem").value;
+            if(!name || !prob) return alert("يرجى ملء كافة الحقول");
+            const newId = Date.now();
+            const newTicket = { id: newId, playerName: name, messages: [{ role: 'player', text: prob }] };
+            const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, { headers: { "X-Master-Key": MASTER_KEY } });
+            const data = await res.json();
+            let all = data.record || [];
+            all.push(newTicket);
+            await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, { method: 'PUT', headers: { "Content-Type": "application/json", "X-Master-Key": MASTER_KEY }, body: JSON.stringify(all) });
+            localStorage.setItem("activeTicketId", newId);
+            location.reload();
+        }
+
+        async function loadMyTicket() {
+            if(!myTicketId) return;
+            document.getElementById("setupArea").style.display = "none";
+            document.getElementById("chatArea").style.display = "block";
+            const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, { headers: { "X-Master-Key": MASTER_KEY } });
+            const data = await res.json();
+            const ticket = data.record.find(t => t.id == myTicketId);
+            if(!ticket) { localStorage.removeItem("activeTicketId"); location.reload(); return; }
+            document.getElementById("messages").innerHTML = ticket.messages.map(m => `<div class="msg ${m.role==='admin'?'admin-reply':'player-msg'}"><strong>${m.role==='admin'?'الإدارة':'أنت'}:</strong> ${m.text}</div>`).join('');
+        }
+
+        async function sendPlayerReply() {
+            const text = document.getElementById("newMsg").value;
+            if(!text) return;
+            const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, { headers: { "X-Master-Key": MASTER_KEY } });
+            const data = await res.json();
+            let all = data.record;
+            const idx = all.findIndex(t => t.id == myTicketId);
+            all[idx].messages.push({ role: 'player', text: text });
+            await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, { method: 'PUT', headers: { "Content-Type": "application/json", "X-Master-Key": MASTER_KEY }, body: JSON.stringify(all) });
+            document.getElementById("newMsg").value = "";
+            loadMyTicket();
+        }
+        if(myTicketId) loadMyTicket();
+    </script>
+</body>
+</html>
