@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>تعديل حالة السيرفر - RP City</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { margin: 0; font-family: 'Cairo', sans-serif; background: #0a0a0a; color: white; text-align: center; padding: 50px; }
+        .edit-box { max-width: 500px; margin: auto; background: #1a1b4b; padding: 30px; border-radius: 20px; border: 2px solid #a855f7; }
+        input, select { width: 100%; padding: 12px; margin: 15px 0; border-radius: 10px; border: 1px solid #444; background: #000; color: white; font-family: 'Cairo'; box-sizing: border-box; }
+        .save-btn { background: #7c3aed; color: white; border: none; padding: 15px 30px; border-radius: 10px; cursor: pointer; width: 100%; font-weight: bold; font-family: 'Cairo'; font-size: 18px; }
+        .save-btn:hover { background: #9333ea; }
+        .back-link { display: block; margin-top: 20px; color: #888; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="edit-box">
+        <h2>⚙️ إعدادات حالة السيرفر</h2>
+        
+        <label>حالة السيرفر الحالية:</label>
+        <select id="serverState">
+            <option value="online">متصل (اونلاين) ✅</option>
+            <option value="offline">مغلق (صيانة) ❌</option>
+        </select>
+
+        <label>رابط أو IP السيرفر:</label>
+        <input type="text" id="serverIP" placeholder="مثال: 51.68.107.75:18009">
+
+        <label>عدد اللاعبين الوهمي/الحقيقي:</label>
+        <input type="number" id="playersCount" placeholder="مثال: 45">
+
+        <button class="save-btn" onclick="saveStatus()">حفظ التغييرات ✨</button>
+        <a href="admin_panel.html" class="back-link">⬅ العودة للوحة الإدارة</a>
+    </div>
+
+    <script>
+        const BIN_ID = "69957a72ae596e708f33b8b9"; // نفس البين المستخدم للأخبار
+        const MASTER_KEY = "$2a$10$EVJpa1kkUQx4JG6CPhwT8eMpLADFaWQc7iR5SShpZRDJSGC2sThvi";
+
+        async function saveStatus() {
+            const state = document.getElementById("serverState").value;
+            const ip = document.getElementById("serverIP").value;
+            const count = document.getElementById("playersCount").value;
+
+            try {
+                // أولاً نجلب البيانات الحالية لكي لا نحذف الأخبار
+                const resLoad = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, { headers: { "X-Master-Key": MASTER_KEY } });
+                const currentData = await resLoad.json();
+                
+                // نحدث فقط قيم السيرفر ونبقي نص الأخبار كما هو
+                let record = currentData.record;
+                record.serverStatus = state;
+                record.serverIP = ip;
+                record.players = count;
+
+                const resSave = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+                    method: 'PUT',
+                    headers: { "Content-Type": "application/json", "X-Master-Key": MASTER_KEY },
+                    body: JSON.stringify(record)
+                });
+
+                if(resSave.ok) alert("✅ تم تحديث الحالة بنجاح!");
+            } catch (e) { alert("❌ حدث خطأ في الاتصال بالسحابة"); }
+        }
+    </script>
+</body>
+</html>
