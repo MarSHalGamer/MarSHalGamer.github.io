@@ -2,119 +2,64 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>الفاكشنات - RP City</title>
+<title>القطاعات - RP City</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
 <style>
-body{
-  background:radial-gradient(circle at top, #6a0dad, #000 70%);
-  color:white;
-  font-family:'Cairo', sans-serif;
-  text-align:center;
-}
-.box{
-  background:rgba(0,0,0,0.6);
-  margin:80px auto;
-  width:60%;
-  padding:30px;
-  border-radius:20px;
-  box-shadow:0 0 25px #9333ea;
-}
-.faction-block{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:15px;
-  background:rgba(124,58,237,0.14);
-  margin:25px 0;
-  padding:14px;
-  border-radius:15px;
-  font-size:20px;
-  box-shadow:0 2px 7px #6a0dad52;
-  flex-wrap:wrap;
-}
-.faction-img{
-  width:48px;
-  height:48px;
-  border-radius:12px;
-  object-fit:cover;
-  border:2px solid #c084fc;
-  background:#222;
-}
-.faction-name-and-members{
-  display:flex;
-  flex-direction:column;
-  align-items:flex-start;
-  text-align:right;
-}
-.faction-name{
-  font-weight:bold;
-  font-size:20px;
-  color:white;
-}
-.faction-members{
-  margin-top:7px;
-  font-size:16px;
-  color:#b3b3ff;
-}
+body{ background:radial-gradient(circle at top, #6a0dad, #000 70%); color:white; font-family:'Cairo', sans-serif; text-align:center; }
+.box{ background:rgba(0,0,0,0.6); margin:80px auto; width:60%; padding:30px; border-radius:20px; box-shadow:0 0 25px #9333ea; }
+.faction-block{ display:flex; align-items:center; justify-content:center; gap:15px; background:rgba(124,58,237,0.14); margin:25px 0; padding:14px; border-radius:15px; font-size:20px; box-shadow:0 2px 7px #6a0dad52; flex-wrap:wrap; transition: 0.3s; }
+.faction-img{ width:55px; height:55px; border-radius:12px; object-fit:cover; border:2px solid #c084fc; background:#222; }
+.faction-name-and-members{ display:flex; flex-direction:column; align-items:flex-start; text-align:right; flex: 1; }
+.faction-name{ font-weight:bold; font-size:22px; color:white; }
+.faction-members{ margin-top:4px; font-size:16px; color:#b3b3ff; }
 a{color:#c084fc;text-decoration:none;font-size:18px;}
 </style>
 </head>
 <body>
 
 <div class="box">
-<h1>🏴 الفاكشنات الحكومية</h1>
+    <h1>🏴 القطاعات الحكومية والخاصة</h1>
+    
+    <div id="factionsContainer">
+        <p>جاري تحميل القطاعات من السحابة...</p>
+    </div>
 
-<div class="faction-block">
-  <img class="faction-img" src="police.png" alt="شعار وزارة الداخلية">
-  <div class="faction-name-and-members">
-    <div class="faction-name">وزارة الداخليه </div>
-    <div class="faction-members">عدد الأعضاء: غير متوفر حالياً</div>
-  </div>
+    <br>
+    <a href="index.html">⬅ العودة للرئيسية</a>
 </div>
 
-<div class="faction-block">
-  <img class="faction-img" src="media.png" alt="شعار وزارة الإعلام">
-  <div class="faction-name-and-members">
-    <div class="faction-name">وزارة العلام </div>
-    <div class="faction-members">عدد الأعضاء: غير متوفر حالياً</div>
-  </div>
-</div>
+<script>
+const BIN_ID = "69ac9ca2d0ea881f40fa3f1d";
+const MASTER_KEY = "$2a$10$EVJpa1kkUQx4JG6CPhwT8eMpLADFaWQc7iR5SShpZRDJSGC2sThvi";
 
-<div class="faction-block">
-  <img class="faction-img" src="fbi.png" alt="شعار مكتب التحقيقات الفييدرالي">
-  <div class="faction-name-and-members">
-    <div class="faction-name">مكتب التحقيقات الفيدرالي  </div>
-    <div class="faction-members">عدد الأعضاء: غير متوفر حالياً</div>
-  </div>
-</div>
+async function loadFactions() {
+    try {
+        const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+            headers: { "X-Master-Key": MASTER_KEY }
+        });
+        const data = await res.json();
+        const factions = data.record.factionsList || [];
+        
+        const container = document.getElementById("factionsContainer");
+        if (factions.length === 0) {
+            container.innerHTML = "<p>لا توجد قطاعات مضافة حالياً.</p>";
+            return;
+        }
 
-<div class="faction-block">
-  <img class="faction-img" src="images/swat.png" alt="الشعار غير متوفر">
-  <div class="faction-name-and-members">
-    <div class="faction-name">  </div>
-    <div class="faction-members">عدد الأعضاء: غير متوفر حالياً</div>
-  </div>
-</div>
-
-<div class="faction-block">
-  <img class="faction-img" src="health.png" alt="شعار وزارة الصحه">
-  <div class="faction-name-and-members">
-    <div class="faction-name">وزارة الصحه </div>
-    <div class="faction-members">عدد الأعضاء: غير متوفر حالياً</div>
-  </div>
-</div>
-
-<div class="faction-block">
-  <img class="faction-img" src="justice.png" alt="شعار وزارة العدل">
-  <div class="faction-name-and-members">
-    <div class="faction-name">وزارة العدل </div>
-    <div class="faction-members">عدد الأعضاء: غير متوفر حالياً</div>
-  </div>
-</div>
-
-<br>
-<a href="index.html">⬅ العودة للرئيسية</a>
-</div>
-
+        container.innerHTML = factions.map(f => `
+            <div class="faction-block">
+                <img class="faction-img" src="${f.image}" alt="شعار ${f.name}">
+                <div class="faction-name-and-members">
+                    <div class="faction-name">${f.name}</div>
+                    <div class="faction-members">الحالة: ${f.status || 'يعمل'}</div>
+                </div>
+            </div>
+        `).join('');
+    } catch (e) {
+        document.getElementById("factionsContainer").innerHTML = "<p>خطأ في جلب البيانات.</p>";
+    }
+}
+window.onload = loadFactions;
+</script>
 </body>
 </html>
