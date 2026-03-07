@@ -8,99 +8,34 @@
     body { background: #0a0a0a; color: white; font-family: 'Cairo', sans-serif; padding: 40px; text-align: center; }
     .container { max-width: 500px; margin: auto; background: #1a1b4b; padding: 30px; border-radius: 20px; border: 2px solid #a855f7; }
     input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #444; background: #000; color: white; box-sizing: border-box; text-align: center; }
-    button { width: 100%; padding: 12px; border-radius: 10px; border: none; cursor: pointer; font-family: 'Cairo'; font-weight: bold; margin-top: 10px; }
-    .btn-save { background: #7c3aed; color: white; }
-    .item { background: rgba(255,255,255,0.05); padding: 15px; margin: 10px 0; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; }
-    .btn-del { background: #ef4444; color: white; width: auto; padding: 5px 15px; }
-</style>
-</head>
-<body>
-
-<div class="container">
-    <h2>➕ إضافة قطاع جديد</h2>
-    <input type="text" id="facName" placeholder="اسم القطاع (مثلاً: وزارة الدفاع)">
-    <input type="text" id="facImg" placeholder="رابط صورة الشعار (URL)">
-    <button class="btn-save" onclick="addFaction()">إضافة للقطاعات ✨</button>
-    <hr style="margin: 25px 0; border: 0; border-top: 1px solid #333;">
-    <h3>📋 القطاعات الحالية</h3>
-    <div id="list">جاري التحميل...</div>
-    <br>
-    <a href="admin_panel.html" style="color:#888; text-decoration:none;">⬅ عودة للوحة الإدارة</a>
-</div>
-
-<script>
-const BIN_ID = "69957a72ae596e708f33b8b9";
-const MASTER_KEY = "$2a$10$EVJpa1kkUQx4JG6CPhwT8eMpLADFaWQc7iR5SShpZRDJSGC2sThvi";
-let cloudData = {};
-
-async function load() {
-    const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, { headers: { "X-Master-Key": MASTER_KEY } });
-    const json = await res.json();
-    cloudData = json.record;
-    if(!cloudData.factionsList) cloudData.factionsList = [];
-    render();
-}
-
-function render() {
-    const listDiv = document.getElementById("list");
-    listDiv.innerHTML = cloudData.factionsList.map((f, i) => `
-        <div class="item">
-            <span>${f.name}</span>
-            <button class="btn-del" onclick="remove(${i})">حذف</button>
-        </div>
-    `).join('');
-}
-
-async function addFaction() {
-    const name = document.getElementById("facName").value;
-    const img = document.getElementById("facImg").value;
-    if(!name || !img) return alert("امسح الحقول وعبيها صح!");
     
-    cloudData.factionsList.push({ name: name, image: img, status: "يعمل ✅" });
-    await update();
-    document.getElementById("facName").value = "";
-    document.getElementById("facImg").value = "";
-}
+    /* ستايل زر اختيار الملفات */
+    .file-label { display: block; background: #000; border: 1px dashed #a855f7; padding: 15px; border-radius: 10px; cursor: pointer; margin: 10px 0; color: #ccc; }
+    #facFile { display: none; }
 
-async function remove(index) {
-    cloudData.factionsList.splice(index, 1);
-    await update();
-}
-
-async function update() {
-    await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
-        method: 'PUT',
-        headers: { "Content-Type": "application/json", "X-Master-Key": MASTER_KEY },
-        body: JSON.stringify(cloudData)
-    });
-    render();
-}
-window.onload = load;
-</script>
-</body>
-</html><!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<title>إدارة القطاعات - الإدارة</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-<style>
-    body { background: #0a0a0a; color: white; font-family: 'Cairo', sans-serif; padding: 40px; text-align: center; }
-    .container { max-width: 500px; margin: auto; background: #1a1b4b; padding: 30px; border-radius: 20px; border: 2px solid #a855f7; }
-    input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #444; background: #000; color: white; box-sizing: border-box; text-align: center; }
     button { width: 100%; padding: 12px; border-radius: 10px; border: none; cursor: pointer; font-family: 'Cairo'; font-weight: bold; margin-top: 10px; }
-    .btn-save { background: #7c3aed; color: white; }
+    .btn-save { background: #7c3aed; color: white; transition: 0.3s; }
+    
     .item { background: rgba(255,255,255,0.05); padding: 15px; margin: 10px 0; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; }
     .btn-del { background: #ef4444; color: white; width: auto; padding: 5px 15px; }
+    
+    #previewImg { width: 100px; height: 100px; border-radius: 10px; object-fit: cover; display: none; margin: 10px auto; border: 2px solid #a855f7; }
 </style>
 </head>
 <body>
 
 <div class="container">
     <h2>➕ إضافة قطاع جديد</h2>
-    <input type="text" id="facName" placeholder="اسم القطاع (مثلاً: وزارة الدفاع)">
-    <input type="text" id="facImg" placeholder="رابط صورة الشعار (URL)">
+    
+    <input type="text" id="facName" placeholder="اسم القطاع (مثل: وزارة الداخلية)">
+    
+    <label for="facFile" class="file-label" id="fileLabel">📁 اختر شعار القطاع من جهازك</label>
+    <input type="file" id="facFile" accept="image/*" onchange="previewFile()">
+    
+    <img id="previewImg">
+
     <button class="btn-save" onclick="addFaction()">إضافة للقطاعات ✨</button>
+    
     <hr style="margin: 25px 0; border: 0; border-top: 1px solid #333;">
     <h3>📋 القطاعات الحالية</h3>
     <div id="list">جاري التحميل...</div>
@@ -112,6 +47,25 @@ window.onload = load;
 const BIN_ID = "69ac9ca2d0ea881f40fa3f1d";
 const MASTER_KEY = "$2a$10$EVJpa1kkUQx4JG6CPhwT8eMpLADFaWQc7iR5SShpZRDJSGC2sThvi";
 let cloudData = {};
+let base64Image = ""; // هنا بنخزن كود الصورة
+
+// وظيفة لمعاينة الصورة وتحويلها لـ Base64
+function previewFile() {
+    const file = document.getElementById('facFile').files[0];
+    const reader = new FileReader();
+    const preview = document.getElementById('previewImg');
+
+    reader.onloadend = function() {
+        base64Image = reader.result; // هذا هو كود الصورة
+        preview.src = reader.result;
+        preview.style.display = "block";
+        document.getElementById("fileLabel").innerText = "✅ تم اختيار الصورة";
+    }
+
+    if (file) {
+        reader.readAsDataURL(file);
+    }
+}
 
 async function load() {
     const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, { headers: { "X-Master-Key": MASTER_KEY } });
@@ -133,16 +87,28 @@ function render() {
 
 async function addFaction() {
     const name = document.getElementById("facName").value;
-    const img = document.getElementById("facImg").value;
-    if(!name || !img) return alert("امسح الحقول وعبيها صح!");
     
-    cloudData.factionsList.push({ name: name, image: img, status: "يعمل ✅" });
+    if(!name || !base64Image) return alert("يرجى كتابة الاسم واختيار صورة!");
+
+    cloudData.factionsList.push({ 
+        name: name, 
+        image: base64Image, // بنرفع النص حق الصورة للسحابة
+        status: "يعمل ✅" 
+    });
+
     await update();
+    
+    // تصفير الخانات
     document.getElementById("facName").value = "";
-    document.getElementById("facImg").value = "";
+    document.getElementById("facFile").value = "";
+    document.getElementById("previewImg").style.display = "none";
+    document.getElementById("fileLabel").innerText = "📁 اختر شعار القطاع من جهازك";
+    base64Image = "";
+    alert("تمت الإضافة بنجاح!");
 }
 
 async function remove(index) {
+    if(!confirm("حذف القطاع؟")) return;
     cloudData.factionsList.splice(index, 1);
     await update();
 }
