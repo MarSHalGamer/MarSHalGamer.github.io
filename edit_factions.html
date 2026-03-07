@@ -6,35 +6,44 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
 <style>
     body { background: #0a0a0a; color: white; font-family: 'Cairo', sans-serif; padding: 40px; text-align: center; }
-    .container { max-width: 500px; margin: auto; background: #1a1b4b; padding: 30px; border-radius: 20px; border: 2px solid #a855f7; }
-    input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #444; background: #000; color: white; box-sizing: border-box; text-align: center; }
+    .container { max-width: 550px; margin: auto; background: #1a1b4b; padding: 30px; border-radius: 20px; border: 2px solid #a855f7; }
+    input, select { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #444; background: #000; color: white; box-sizing: border-box; text-align: center; font-family: 'Cairo'; }
     
-    /* ستايل زر اختيار الملفات */
     .file-label { display: block; background: #000; border: 1px dashed #a855f7; padding: 15px; border-radius: 10px; cursor: pointer; margin: 10px 0; color: #ccc; }
     #facFile { display: none; }
 
-    button { width: 100%; padding: 12px; border-radius: 10px; border: none; cursor: pointer; font-family: 'Cairo'; font-weight: bold; margin-top: 10px; }
-    .btn-save { background: #7c3aed; color: white; transition: 0.3s; }
-    
-    .item { background: rgba(255,255,255,0.05); padding: 15px; margin: 10px 0; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; }
+    button { width: 100%; padding: 12px; border-radius: 10px; border: none; cursor: pointer; font-family: 'Cairo'; font-weight: bold; margin-top: 10px; transition: 0.3s; }
+    .btn-save { background: #7c3aed; color: white; }
+    .btn-edit { background: #f59e0b; color: white; width: auto; padding: 5px 15px; margin-left: 5px; }
     .btn-del { background: #ef4444; color: white; width: auto; padding: 5px 15px; }
+    .btn-cancel { background: #444; color: white; display: none; }
     
-    #previewImg { width: 100px; height: 100px; border-radius: 10px; object-fit: cover; display: none; margin: 10px auto; border: 2px solid #a855f7; }
+    .item { background: rgba(255,255,255,0.05); padding: 15px; margin: 10px 0; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; border-right: 4px solid #a855f7; }
+    .item-info { text-align: right; }
+    #previewImg { width: 80px; height: 80px; border-radius: 10px; object-fit: cover; display: none; margin: 10px auto; border: 2px solid #a855f7; }
 </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>➕ إضافة قطاع جديد</h2>
+    <h2 id="formTitle">➕ إضافة قطاع جديد</h2>
     
     <input type="text" id="facName" placeholder="اسم القطاع (مثل: وزارة الداخلية)">
+    <input type="text" id="facMembers" placeholder="عدد الأعضاء (مثلاً: 15 عضو)">
+    
+    <select id="facStatus">
+        <option value="يعمل ✅">يعمل ✅</option>
+        <option value="تحت الصيانة 🛠️">تحت الصيانة 🛠️</option>
+        <option value="مغلق مؤقتاً ❌">مغلق مؤقتاً ❌</option>
+    </select>
     
     <label for="facFile" class="file-label" id="fileLabel">📁 اختر شعار القطاع من جهازك</label>
     <input type="file" id="facFile" accept="image/*" onchange="previewFile()">
     
     <img id="previewImg">
 
-    <button class="btn-save" onclick="addFaction()">إضافة للقطاعات ✨</button>
+    <button class="btn-save" id="mainBtn" onclick="processFaction()">إضافة للقطاعات ✨</button>
+    <button class="btn-cancel" id="cancelBtn" onclick="cancelEdit()">إلغاء التعديل</button>
     
     <hr style="margin: 25px 0; border: 0; border-top: 1px solid #333;">
     <h3>📋 القطاعات الحالية</h3>
@@ -47,24 +56,21 @@
 const BIN_ID = "69ac9ca2d0ea881f40fa3f1d";
 const MASTER_KEY = "$2a$10$EVJpa1kkUQx4JG6CPhwT8eMpLADFaWQc7iR5SShpZRDJSGC2sThvi";
 let cloudData = {};
-let base64Image = ""; // هنا بنخزن كود الصورة
+let base64Image = ""; 
+let editIndex = -1; // -1 تعني وضع الإضافة، أي رقم آخر يعني وضع التعديل
 
-// وظيفة لمعاينة الصورة وتحويلها لـ Base64
 function previewFile() {
     const file = document.getElementById('facFile').files[0];
     const reader = new FileReader();
     const preview = document.getElementById('previewImg');
 
     reader.onloadend = function() {
-        base64Image = reader.result; // هذا هو كود الصورة
+        base64Image = reader.result;
         preview.src = reader.result;
         preview.style.display = "block";
         document.getElementById("fileLabel").innerText = "✅ تم اختيار الصورة";
     }
-
-    if (file) {
-        reader.readAsDataURL(file);
-    }
+    if (file) reader.readAsDataURL(file);
 }
 
 async function load() {
@@ -79,32 +85,79 @@ function render() {
     const listDiv = document.getElementById("list");
     listDiv.innerHTML = cloudData.factionsList.map((f, i) => `
         <div class="item">
-            <span>${f.name}</span>
-            <button class="btn-del" onclick="remove(${i})">حذف</button>
+            <div class="item-info">
+                <strong>${f.name}</strong><br>
+                <small style="color:#aaa;">${f.members || '0'} | ${f.status}</small>
+            </div>
+            <div>
+                <button class="btn-edit" onclick="startEdit(${i})">تعديل</button>
+                <button class="btn-del" onclick="remove(${i})">حذف</button>
+            </div>
         </div>
     `).join('');
 }
 
-async function addFaction() {
+async function processFaction() {
     const name = document.getElementById("facName").value;
+    const members = document.getElementById("facMembers").value;
+    const status = document.getElementById("facStatus").value;
     
-    if(!name || !base64Image) return alert("يرجى كتابة الاسم واختيار صورة!");
+    if(!name) return alert("يرجى كتابة الاسم!");
+    // في حالة الإضافة الجديدة يجب اختيار صورة، في التعديل اختيار الصورة اختياري
+    if(editIndex === -1 && !base64Image) return alert("يرجى اختيار صورة!");
 
-    cloudData.factionsList.push({ 
-        name: name, 
-        image: base64Image, // بنرفع النص حق الصورة للسحابة
-        status: "يعمل ✅" 
-    });
+    const factionData = {
+        name: name,
+        members: members || "غير متوفر",
+        status: status,
+        image: base64Image || (editIndex !== -1 ? cloudData.factionsList[editIndex].image : "")
+    };
+
+    if (editIndex === -1) {
+        cloudData.factionsList.push(factionData);
+    } else {
+        cloudData.factionsList[editIndex] = factionData;
+    }
 
     await update();
+    resetForm();
+    alert(editIndex === -1 ? "تمت الإضافة!" : "تم التعديل بنجاح!");
+    editIndex = -1;
+}
+
+function startEdit(index) {
+    editIndex = index;
+    const f = cloudData.factionsList[index];
     
-    // تصفير الخانات
+    document.getElementById("facName").value = f.name;
+    document.getElementById("facMembers").value = f.members || "";
+    document.getElementById("facStatus").value = f.status;
+    document.getElementById("previewImg").src = f.image;
+    document.getElementById("previewImg").style.display = "block";
+    base64Image = f.image; // الاحتفاظ بالصورة القديمة ما لم يتم تغييرها
+
+    document.getElementById("formTitle").innerText = "✏️ تعديل قطاع: " + f.name;
+    document.getElementById("mainBtn").innerText = "حفظ التعديلات ✅";
+    document.getElementById("cancelBtn").style.display = "block";
+    window.scrollTo(0,0);
+}
+
+function cancelEdit() {
+    resetForm();
+    editIndex = -1;
+}
+
+function resetForm() {
     document.getElementById("facName").value = "";
+    document.getElementById("facMembers").value = "";
+    document.getElementById("facStatus").value = "يعمل ✅";
     document.getElementById("facFile").value = "";
     document.getElementById("previewImg").style.display = "none";
     document.getElementById("fileLabel").innerText = "📁 اختر شعار القطاع من جهازك";
+    document.getElementById("formTitle").innerText = "➕ إضافة قطاع جديد";
+    document.getElementById("mainBtn").innerText = "إضافة للقطاعات ✨";
+    document.getElementById("cancelBtn").style.display = "none";
     base64Image = "";
-    alert("تمت الإضافة بنجاح!");
 }
 
 async function remove(index) {
