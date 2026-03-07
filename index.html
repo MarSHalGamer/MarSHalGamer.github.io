@@ -5,6 +5,20 @@
 <title>RP City MTAS</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
 <style>
+/* --- الإضافة الجديدة لعلامة الحقوق في الزاوية --- */
+.crp-brand {
+    position: fixed;
+    top: 15px;
+    right: 20px;
+    font-size: 13px;
+    color: rgba(168, 85, 247, 0.7); /* لون بنفسجي شفاف قليلاً */
+    z-index: 9999;
+    font-family: 'Cairo', sans-serif;
+    pointer-events: none; /* عشان ما يغطي على الضغطات */
+    direction: ltr; /* لعرض النص الروسي والإنجليزي بشكل صحيح */
+}
+/* ------------------------------------------ */
+
 body{ margin:0; font-family:'Cairo', sans-serif; background:radial-gradient(circle at top, #6a0dad, #000000 70%); color:white; text-align:center; overflow-x: hidden; }
 .news-ticker { background: rgba(124, 58, 237, 0.7); backdrop-filter: blur(5px); color: white; padding: 12px 0; overflow: hidden; position: relative; border-bottom: 2px solid #a855f7; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 100; }
 .ticker-content { display: inline-block; white-space: nowrap; padding-right: 100%; animation: ticker 25s linear infinite; font-weight: bold; font-size: 18px; }
@@ -28,7 +42,11 @@ footer{ margin-top:60px; padding:25px; color:#aaa; font-size:15px; }
 </style>
 </head>
 <body>
+
+<div class="crp-brand">صنع بواسطة CRP | Этот аккаунт был взломан</div>
+
 <div class="news-ticker"> <div class="ticker-content" id="newsText">جاري جلب آخر الأخبار من السحابة...</div> </div>
+
 <div id="adminModal" class="admin-modal">
   <div class="modal-content">
     <h2>🔐 دخول الإدارة</h2>
@@ -39,9 +57,11 @@ footer{ margin-top:60px; padding:25px; color:#aaa; font-size:15px; }
     </div>
   </div>
 </div>
+
 <div class="logo"> <img src="logo.png" alt="RP City Logo"> </div>
 <h1>RP City Roleplay MTA.San</h1>
 <p>الموقع الرسمي لسيرفر RP City</p>
+
 <div class="buttons">
   <a href="owners.html">🕍 القطاعات</a>
   <a href="admins.html">🛡️ الأدمن</a>
@@ -53,12 +73,15 @@ footer{ margin-top:60px; padding:25px; color:#aaa; font-size:15px; }
   <a href="mtasa://">🎮 العب الآن</a>
   <button onclick="copyDiscord()">🔗 رابط الدسكورد</button>
 </div>
+
 <div class="admin-section"> <button class="admin-btn" onclick="openAdminModal()">🔐 خاص بالادمن</button> </div>
 <div id="toast">✅ تم نسخ رابط الدسكورد</div>
 <footer>© 2026 RP City MTAS — جميع الحقوق محفوظة</footer>
+
 <script>
 const BIN_ID_NEWS = "69957a72ae596e708f33b8b9";
 const MASTER_KEY = "$2a$10$EVJpa1kkUQx4JG6CPhwT8eMpLADFaWQc7iR5SShpZRDJSGC2sThvi";
+
 async function loadCloudNews() {
     try {
         const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID_NEWS}/latest`, { headers: { "X-Master-Key": MASTER_KEY } });
@@ -67,6 +90,7 @@ async function loadCloudNews() {
     } catch (e) { document.getElementById("newsText").innerText = "مرحباً بكم في RP City!"; }
 }
 window.onload = loadCloudNews;
+
 function copyDiscord(){ navigator.clipboard.writeText("https://discord.gg/7U7QF4f5VD").then(()=>{ const t = document.getElementById("toast"); t.style.display="block"; setTimeout(()=>t.style.display="none", 2500); }); }
 function openAdminModal() { document.getElementById("adminModal").style.display = "flex"; document.getElementById("adminPass").focus(); }
 function closeAdminModal() { document.getElementById("adminModal").style.display = "none"; }
