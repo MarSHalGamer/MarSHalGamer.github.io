@@ -1,51 +1,137 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <title>RP City MTAS</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
 <style>
-/* --- الإضافة الجديدة لعلامة الحقوق في الزاوية --- */
+/* --- علامة الحقوق --- */
 .crp-brand {
     position: fixed;
-    top: 15px;
+    top: 85px; /* نزلتها شوي عشان ما تغطي على المنيو */
     right: 20px;
-    font-size: 13px;
-    color: rgba(168, 85, 247, 0.7); /* لون بنفسجي شفاف قليلاً */
-    z-index: 9999;
+    font-size: 11px;
+    color: rgba(168, 85, 247, 0.5);
+    z-index: 999;
     font-family: 'Cairo', sans-serif;
-    pointer-events: none; /* عشان ما يغطي على الضغطات */
-    direction: ltr; /* لعرض النص الروسي والإنجليزي بشكل صحيح */
+    pointer-events: none;
+    direction: ltr;
 }
-/* ------------------------------------------ */
 
-body{ margin:0; font-family:'Cairo', sans-serif; background:radial-gradient(circle at top, #6a0dad, #000000 70%); color:white; text-align:center; overflow-x: hidden; }
-.news-ticker { background: rgba(124, 58, 237, 0.7); backdrop-filter: blur(5px); color: white; padding: 12px 0; overflow: hidden; position: relative; border-bottom: 2px solid #a855f7; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 100; }
-.ticker-content { display: inline-block; white-space: nowrap; padding-right: 100%; animation: ticker 25s linear infinite; font-weight: bold; font-size: 18px; }
+body { 
+    margin:0; 
+    font-family:'Cairo', sans-serif; 
+    background:radial-gradient(circle at top, #6a0dad, #000000 70%); 
+    color:white; 
+    text-align:center; 
+    overflow-x: hidden; 
+}
+
+/* --- الهيدر الجديد (مثل الصورة) --- */
+.header-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 40px;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-right { display: flex; align-items: center; gap: 20px; }
+.nav-logo img { width: 60px; filter: drop-shadow(0 0 10px #a855f7); }
+
+.buttons-container {
+    display: flex;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 8px 20px;
+    border-radius: 50px;
+    border: 1px solid rgba(168, 85, 247, 0.2);
+}
+
+.buttons-container a, .buttons-container button {
+    color: white;
+    text-decoration: none;
+    font-size: 15px;
+    padding: 8px 15px;
+    border-radius: 10px;
+    transition: 0.3s;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: 'Cairo', sans-serif;
+}
+
+.buttons-container a:hover, .buttons-container button:hover {
+    background: rgba(124, 58, 237, 0.3);
+    color: #c084fc;
+}
+
+/* --- بقية التنسيقات --- */
+.news-ticker { background: rgba(124, 58, 237, 0.7); backdrop-filter: blur(5px); color: white; padding: 10px 0; overflow: hidden; position: relative; border-bottom: 1px solid #a855f7; }
+.ticker-content { display: inline-block; white-space: nowrap; padding-right: 100%; animation: ticker 25s linear infinite; font-weight: bold; font-size: 16px; }
 @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-.logo{ margin-top:40px; }
-.logo img{ width:200px; filter:drop-shadow(0 0 20px #a855f7); }
-h1{ margin-top:10px; font-size:38px; letter-spacing:1px; }
-.buttons{ margin-top:50px; }
-.buttons a, .buttons button{ display:inline-block; margin:15px; padding:18px 45px; background:linear-gradient(135deg,#7c3aed,#1e1b4b); color:white; text-decoration:none; border-radius:15px; font-size:22px; border:none; cursor:pointer; box-shadow:0 0 15px rgba(168,85,247,0.5); transition:0.3s; font-family: 'Cairo', sans-serif; }
-.buttons a:hover, .buttons button:hover{ transform:translateY(-6px) scale(1.05); box-shadow:0 0 30px rgba(168,85,247,0.9); }
+
+.hero-section { margin-top: 100px; padding: 20px; }
+h1 { font-size: 45px; text-shadow: 0 0 20px #a855f7; margin-bottom: 5px; }
+.hero-section p { color: #ccc; font-size: 20px; }
+
 .admin-section { margin-top: 50px; }
-.admin-btn { background: none; border: 1px solid #444; color: #888; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-size: 16px; transition: 0.3s; font-family: 'Cairo', sans-serif; }
-.admin-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); z-index: 1000; justify-content: center; align-items: center; }
-.modal-content { background: #1a1b4b; padding: 40px; border-radius: 20px; border: 2px solid #a855f7; width: 350px; text-align: center; }
+.admin-btn { background: none; border: 1px solid #333; color: #555; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 14px; transition: 0.3s; }
+.admin-btn:hover { border-color: #a855f7; color: #a855f7; }
+
+/* المودال */
+.admin-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); z-index: 2000; justify-content: center; align-items: center; }
+.modal-content { background: #1a1b4b; padding: 40px; border-radius: 20px; border: 2px solid #a855f7; width: 320px; }
 .modal-content input { width: 100%; padding: 12px; margin: 20px 0; border-radius: 10px; border: 1px solid #444; background: #000; color: white; text-align: center; font-size: 18px; }
 .modal-buttons { display: flex; gap: 10px; }
-.modal-confirm { flex: 2; background: #7c3aed; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-family: 'Cairo'; font-weight: bold; }
-.modal-cancel { flex: 1; background: #444; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; }
-#toast{ position:fixed; bottom:40px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.8); padding:15px 35px; border-radius:15px; box-shadow:0 0 20px #9333ea; display:none; font-size:18px; }
-footer{ margin-top:60px; padding:25px; color:#aaa; font-size:15px; }
+.modal-confirm { flex: 2; background: #7c3aed; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; font-family: 'Cairo'; }
+.modal-cancel { flex: 1; background: #444; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-family: 'Cairo'; }
+
+#toast { position:fixed; bottom:40px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.8); padding:12px 30px; border-radius:10px; box-shadow:0 0 20px #9333ea; display:none; z-index: 3000; }
+footer { margin-top: 100px; padding: 30px; color: #666; font-size: 14px; }
 </style>
 </head>
 <body>
 
+<header class="header-nav">
+    <div class="buttons-container">
+        <a href="owners.html">🕍 القطاعات</a>
+        <a href="admins.html">🛡️ الأدمن</a>
+        <a href="supporters.html">💙 الداعمين</a>
+        <a href="rules.html">📜 القوانين</a>
+        <a href="shop.html">🛒 المتجر</a>
+        <a href="tickets.html">🎧 الدعم</a>
+        <a href="status.html">📊 الحالة</a>
+        <button onclick="copyDiscord()">🔗 ديسكورد</button>
+    </div>
+
+    <div class="nav-right">
+        <div class="nav-logo">
+            <img src="logo.png" alt="RP City Logo">
+        </div>
+    </div>
+</header>
+
 <div class="crp-brand">صنع بواسطة CRP | Этот аккаунт был взломан</div>
 
-<div class="news-ticker"> <div class="ticker-content" id="newsText">جاري جلب آخر الأخبار من السحابة...</div> </div>
+<div class="news-ticker"> <div class="ticker-content" id="newsText">جاري جلب آخر الأخبار...</div> </div>
+
+<div class="hero-section">
+    <h1>RP City Roleplay</h1>
+    <p>الموقع الرسمي لسيرفر RP City MTA:SA</p>
+    <div style="margin-top: 30px;">
+        <a href="mtasa://" style="background: #a855f7; color: white; padding: 15px 40px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 20px; box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);">🎮 العب الآن</a>
+    </div>
+</div>
+
+<div class="admin-section"> 
+    <button class="admin-btn" onclick="openAdminModal()">🔐 لوحة الإدارة</button> 
+</div>
 
 <div id="adminModal" class="admin-modal">
   <div class="modal-content">
@@ -58,24 +144,8 @@ footer{ margin-top:60px; padding:25px; color:#aaa; font-size:15px; }
   </div>
 </div>
 
-<div class="logo"> <img src="logo.png" alt="RP City Logo"> </div>
-<h1>RP City Roleplay MTA.San</h1>
-<p>الموقع الرسمي لسيرفر RP City</p>
-
-<div class="buttons">
-  <a href="owners.html">🕍 القطاعات</a>
-  <a href="admins.html">🛡️ الأدمن</a>
-  <a href="supporters.html">💙 الداعمين</a>
-  <a href="rules.html">📜 القوانين</a>
-  <a href="shop.html">🛒 المتجر</a>
-  <a href="tickets.html">🎧 الدعم الفني</a>
-  <a href="status.html">📊 حالة السيرفر</a>
-  <a href="mtasa://">🎮 العب الآن</a>
-  <button onclick="copyDiscord()">🔗 رابط الدسكورد</button>
-</div>
-
-<div class="admin-section"> <button class="admin-btn" onclick="openAdminModal()">🔐 خاص بالادمن</button> </div>
 <div id="toast">✅ تم نسخ رابط الدسكورد</div>
+
 <footer>© 2026 RP City MTAS — جميع الحقوق محفوظة</footer>
 
 <script>
